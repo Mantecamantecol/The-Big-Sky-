@@ -15,7 +15,7 @@ body{background:#000;color:#fff;text-align:center;margin:0;font-family:Arial,san
 <audio id="audioClash" loop><source src="clash.mp3" type="audio/mpeg"></audio><audio id="audioFallen" loop><source src="Vsfallen.mp3" type="audio/mpeg"></audio><audio id="audioVictoria"><source src="yeah.mp3" type="audio/mpeg"></audio>
 
 <script>
-const TOTAL=95;let pagina=1,nombreHilbert="",timerStart=null,startDisponible=false,tipoClash=null,terminado=true,turnoOcupado=false,hpHilbert=85,hpSkybound=75,hpSkybounds=[75,75,75],pacienciaPapa=100,turnoSky=0,hpFallen=850,hpHilbertFallen=110,hpSamanthaFallen=100;
+const TOTAL=105;let pagina=1,nombreHilbert="",timerStart=null,startDisponible=false,tipoClash=null,terminado=true,turnoOcupado=false,hpHilbert=85,hpSkybound=75,hpSkybounds=[75,75,75],pacienciaPapa=100,turnoSky=0,hpFallen=850,hpHilbertFallen=110,hpSamanthaFallen=100;
 const contenido=document.getElementById("contenido"),texto=document.getElementById("texto"),vida=document.getElementById("vida"),barraNormal=document.getElementById("barraNormal"),barrasTres=document.getElementById("barrasTres"),barrasFallen=document.getElementById("barrasFallen"),nombreE=document.getElementById("nombreE"),barraUnica=document.getElementById("barraUnica"),hp=document.getElementById("hp"),barraSky1=document.getElementById("barraSky1"),barraSky2=document.getElementById("barraSky2"),barraSky3=document.getElementById("barraSky3"),hpTres=document.getElementById("hpTres"),barraFallen=document.getElementById("barraFallen"),barraHilbertFallen=document.getElementById("barraHilbertFallen"),barraSamanthaFallen=document.getElementById("barraSamanthaFallen"),hpFallenTexto=document.getElementById("hpFallen"),hpHilbertFallenTexto=document.getElementById("hpHilbertFallen"),hpSamanthaFallenTexto=document.getElementById("hpSamanthaFallen"),acciones=document.getElementById("acciones"),botonHablar=document.getElementById("botonHablar"),botonAtacar=document.getElementById("botonAtacar"),botonHuir=document.getElementById("botonHuir"),startButton=document.getElementById("startButton"),nombreBoton=document.getElementById("nombreBoton"),nombreBox=document.getElementById("nombreBox"),nombreInput=document.getElementById("nombreInput"),botonAnterior=document.getElementById("botonAnterior"),botonSiguiente=document.getElementById("botonSiguiente"),noMercy=document.getElementById("noMercy"),audioClash=document.getElementById("audioClash"),audioFallen=document.getElementById("audioFallen"),audioVictoria=document.getElementById("audioVictoria"),pag=document.getElementById("pag");
 
 const textos=[
@@ -53,7 +53,7 @@ function terminarClash(){terminado=true;turnoOcupado=false;acciones.style.displa
 function mostrarNombre(){nombreBox.style.display="block"}function confirmarNombre(){let n=nombreInput.value.trim();if(n)nombreHilbert=n;nombreBox.style.display="none";actualizar()}
 function preparar31(){startDisponible=false;botonAnterior.style.display="inline-block";botonSiguiente.style.display="none";startButton.style.display="none";if(timerStart)clearTimeout(timerStart);timerStart=setTimeout(()=>{if(pagina===31){startDisponible=true;startButton.style.display="inline-block"}},10000)}
 
-const nombres={5:"[V]: el inicio",22:"[V]: ver el buzón",31:"[V]: loading",58:"[V]: The Fallen...",28:"[C]: Clash!",37:"[C]: Skybound!",50:"[C]: More Skybounds?!",57:"[C]: The Fallen..."};
+const nombres={5:"[V]: el inicio",22:"[V]: ver el buzón",31:"[V]: loading",58:"[V]: The Fallen...",28:"[C]: Clash!",37:"[C]: Skybound!",50:"[C]: More Skybounds?!",57:"[C]: The Fallen..." ,77:"[V]: ???"};
 function actualizar(){
 if(timerStart){clearTimeout(timerStart);timerStart=null}startDisponible=false;turnoOcupado=false;acciones.style.display="none";vida.style.display="none";botonHuir.disabled=false;botonHablar.disabled=false;botonAtacar.disabled=false;noMercy.style.display="none";musicaOff();tipoClash=null;terminado=true;
 pag.textContent=(nombres[pagina]||"Página "+pagina);
@@ -61,6 +61,7 @@ document.body.style.background=pagina<=5?"#000":"#F4FBFF";document.body.style.co
 let n=String(pagina).padStart(3,"0");
 if(pagina===5)contenido.innerHTML='<video controls autoplay playsinline><source src="pelea.mp4" type="video/mp4"></video>';
 else if(pagina===71)contenido.innerHTML='<video controls autoplay playsinline><source src="hilbertSHIT.mp4" type="video/mp4"></video>';
+  else if(pagina===77)contenido.innerHTML='<video controls autoplay playsinline><source src="something.mp4" type="video/mp4"></video>';
 else if(pagina===22)contenido.innerHTML='<video controls autoplay playsinline><source src="TBS.mp4" type="video/mp4"></video>';
 else if(pagina===31)contenido.innerHTML='<video controls autoplay playsinline><source src="loadingTBS.mp4" type="video/mp4"></video>';
 else if(pagina===58)contenido.innerHTML='<video controls autoplay playsinline><source src="Fallenwin.mp4" type="video/mp4"></video>';
