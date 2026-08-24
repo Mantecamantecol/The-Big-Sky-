@@ -1,1114 +1,127 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Big SKY</title>
-<style>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Big SKY</title><style>
 body{background:#000;color:#fff;text-align:center;margin:0;font-family:Arial,sans-serif;transition:.5s}
 #contenido img,#contenido video{max-width:100%;height:auto;display:block;margin:auto}
-#texto{font-size:22px;margin:15px auto;padding:0 15px;max-width:800px}
-.linea{margin:8px 0}
-.dialogoIC{color:#FF8C00}
-.dialogoHS{color:#FFD700}
-.dialogoWP{color:#3498DB}
-.dialogoFV{color:#FF69B4}
-#vida{display:none;width:90%;max-width:600px;margin:10px auto 20px}
-#nombreE{font-size:22px;font-weight:bold}
-.fondo{width:100%;height:25px;background:#555;border:2px solid #222;box-sizing:border-box;margin-top:6px}
-.barra{width:100%;height:100%;background:#d62828;transition:.3s}
-#hp{font-size:20px;margin-top:5px}
-#barrasTres{display:none}
-.nombreSky{font-weight:bold;margin-top:8px}
-#barrasFallen{display:none}
-.nombreFallen,.nombreJugador{font-weight:bold;margin-top:8px}
-#acciones{display:none;margin:15px auto}
-.pelea{font-size:19px;padding:12px 20px;margin:5px;cursor:pointer}
-.pelea:disabled{opacity:.4;cursor:not-allowed}
+#texto{font-size:22px;margin:15px auto;padding:0 15px;max-width:800px}.linea{margin:8px 0}
+.dialogoIC{color:#FF8C00}.dialogoHS{color:#FFD700}.dialogoWP{color:#3498DB}.dialogoFV{color:#FF69B4}
+#vida{display:none;width:90%;max-width:600px;margin:10px auto 20px}#nombreE{font-size:22px;font-weight:bold}
+.fondo{width:100%;height:25px;background:#555;border:2px solid #222;box-sizing:border-box;margin-top:6px}.barra{width:100%;height:100%;background:#d62828;transition:.3s}
+#hp{font-size:20px;margin-top:5px}#barrasTres,#barrasFallen{display:none}.nombreSky,.nombreFallen,.nombreJugador{font-weight:bold;margin-top:8px}
+#acciones{display:none;margin:15px auto}.pelea{font-size:19px;padding:12px 20px;margin:5px;cursor:pointer}.pelea:disabled{opacity:.4;cursor:not-allowed}
 button{font-size:20px;padding:10px 18px;margin:6px 4px;cursor:pointer}
-#nombreBoton,#nombreBox,#startButton{display:none}
-#nombreBox{margin:15px}
-#nombreInput{font-size:20px;padding:8px;max-width:250px}
-#guardado{font-size:16px;margin-top:20px;padding:10px;opacity:.75}
-#noMercy{display:none;font-size:20px;font-weight:bold;margin-top:8px}
-</style>
-</head>
-<body>
+#nombreBoton,#nombreBox,#startButton{display:none}#nombreBox{margin:15px}#nombreInput{font-size:20px;padding:8px;max-width:250px}
+#guardado{font-size:16px;margin-top:20px;padding:10px;opacity:.75}#noMercy{display:none;font-size:20px;font-weight:bold;margin-top:8px}
+</style></head><body>
 
-<h1>The Big SKY</h1>
+<h1>The Big SKY</h1><div id="vida"><div id="nombreE">ENEMIGO</div>
+<div id="barraNormal"><div class="fondo"><div id="barraUnica" class="barra"></div></div><div id="hp">100%</div></div>
+<div id="barrasTres"><div class="nombreSky">SKYBOUND 1</div><div class="fondo"><div id="barraSky1" class="barra"></div></div>
+<div class="nombreSky">SKYBOUND 2</div><div class="fondo"><div id="barraSky2" class="barra"></div></div>
+<div class="nombreSky">SKYBOUND 3</div><div class="fondo"><div id="barraSky3" class="barra"></div></div><div id="hpTres"></div></div>
+<div id="barrasFallen"><div class="nombreFallen">FALLEN</div><div class="fondo"><div id="barraFallen" class="barra"></div></div><div id="hpFallen">850/850</div>
+<div class="nombreJugador">HILBERT</div><div class="fondo"><div id="barraHilbertFallen" class="barra"></div></div><div id="hpHilbertFallen">110/110</div>
+<div class="nombreJugador">SAMANTHA</div><div class="fondo"><div id="barraSamanthaFallen" class="barra"></div></div><div id="hpSamanthaFallen">100/100</div></div></div>
 
-<div id="vida">
-<div id="nombreE">ENEMIGO</div>
-
-<div id="barraNormal">
-<div class="fondo"><div id="barraUnica" class="barra"></div></div>
-<div id="hp">100%</div>
-</div>
-
-<div id="barrasTres">
-<div class="nombreSky">SKYBOUND 1</div>
-<div class="fondo"><div id="barraSky1" class="barra"></div></div>
-
-<div class="nombreSky">SKYBOUND 2</div>
-<div class="fondo"><div id="barraSky2" class="barra"></div></div>
-
-<div class="nombreSky">SKYBOUND 3</div>
-<div class="fondo"><div id="barraSky3" class="barra"></div></div>
-
-<div id="hpTres"></div>
-</div>
-
-<div id="barrasFallen">
-<div class="nombreFallen">FALLEN</div>
-<div class="fondo"><div id="barraFallen" class="barra"></div></div>
-<div id="hpFallen">850/850</div>
-
-<div class="nombreJugador">HILBERT</div>
-<div class="fondo"><div id="barraHilbertFallen" class="barra"></div></div>
-<div id="hpHilbertFallen">110/110</div>
-
-<div class="nombreJugador">SAMANTHA</div>
-<div class="fondo"><div id="barraSamanthaFallen" class="barra"></div></div>
-<div id="hpSamanthaFallen">100/100</div>
-</div>
-</div>
-
-<div id="contenido">
-<img src="001.png" alt="Página 1">
-</div>
-
-<div id="texto"></div>
-
-<div id="acciones">
-<button id="botonHablar" class="pelea" onclick="hablar()">HABLAR</button>
-<button id="botonAtacar" class="pelea" onclick="atacar()">ATACAR</button>
-<button id="botonHuir" class="pelea" onclick="huir()">HUIR</button>
-<div id="noMercy">No mercy!</div>
-</div>
-
-<button id="startButton" onclick="iniciarTBS()">Start!</button>
-
-<button id="nombreBoton" onclick="mostrarNombre()">Ponerle nombre</button>
-
-<div id="nombreBox">
-<p>¿Cómo debería llamarse este chico?</p>
-<input id="nombreInput" maxlength="20" placeholder="Escribe un nombre">
-<br>
-<button onclick="confirmarNombre()">CONFIRMAR</button>
-</div>
-
-<div>
-<button id="botonAnterior" onclick="irAnterior()">&lt;==</button>
-<button id="botonSiguiente" onclick="irSiguiente()">==&gt;</button>
-</div>
-
+<div id="contenido"><img src="001.png" alt="Página 1"></div><div id="texto"></div>
+<div id="acciones"><button id="botonHablar" class="pelea" onclick="hablar()">HABLAR</button><button id="botonAtacar" class="pelea" onclick="atacar()">ATACAR</button><button id="botonHuir" class="pelea" onclick="huir()">HUIR</button><div id="noMercy">No mercy!</div></div>
+<button id="startButton" onclick="iniciarTBS()">Start!</button><button id="nombreBoton" onclick="mostrarNombre()">Ponerle nombre</button>
+<div id="nombreBox"><p>¿Cómo debería llamarse este chico?</p><input id="nombreInput" maxlength="20" placeholder="Escribe un nombre"><br><button onclick="confirmarNombre()">CONFIRMAR</button></div>
+<div><button id="botonAnterior" onclick="irAnterior()">&lt;==</button><button id="botonSiguiente" onclick="irSiguiente()">==&gt;</button></div>
 <div id="guardado">Esto tiene guardado automático, gracias por leer &lt;3</div>
 
-<audio id="audioClash" loop>
-<source src="clash.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="audioFallen" loop>
-<source src="Vsfallen.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="audioVictoria">
-<source src="yeah.mp3" type="audio/mpeg">
-</audio>
+<audio id="audioClash" loop><source src="clash.mp3" type="audio/mpeg"></audio>
+<audio id="audioFallen" loop><source src="Vsfallen.mp3" type="audio/mpeg"></audio>
+<audio id="audioVictoria"><source src="yeah.mp3" type="audio/mpeg"></audio>
 
 <script>
-const TOTAL=95;
+const TOTAL=95;let pagina=1,nombreHilbert="",timerStart=null,startDisponible=false,tipoClash=null,terminado=true,turnoOcupado=false;
+let hpHilbert=85,hpSkybound=75,hpSkybounds=[75,75,75],pacienciaPapa=100,turnoSky=0,hpFallen=850,hpHilbertFallen=110,hpSamanthaFallen=100;
+const contenido=document.getElementById("contenido"),texto=document.getElementById("texto"),vida=document.getElementById("vida"),barraNormal=document.getElementById("barraNormal"),barrasTres=document.getElementById("barrasTres"),barrasFallen=document.getElementById("barrasFallen"),nombreE=document.getElementById("nombreE"),barraUnica=document.getElementById("barraUnica"),hp=document.getElementById("hp"),barraSky1=document.getElementById("barraSky1"),barraSky2=document.getElementById("barraSky2"),barraSky3=document.getElementById("barraSky3"),hpTres=document.getElementById("hpTres"),barraFallen=document.getElementById("barraFallen"),barraHilbertFallen=document.getElementById("barraHilbertFallen"),barraSamanthaFallen=document.getElementById("barraSamanthaFallen"),hpFallenTexto=document.getElementById("hpFallen"),hpHilbertFallenTexto=document.getElementById("hpHilbertFallen"),hpSamanthaFallenTexto=document.getElementById("hpSamanthaFallen"),acciones=document.getElementById("acciones"),botonHablar=document.getElementById("botonHablar"),botonAtacar=document.getElementById("botonAtacar"),botonHuir=document.getElementById("botonHuir"),startButton=document.getElementById("startButton"),nombreBoton=document.getElementById("nombreBoton"),nombreBox=document.getElementById("nombreBox"),nombreInput=document.getElementById("nombreInput"),botonAnterior=document.getElementById("botonAnterior"),botonSiguiente=document.getElementById("botonSiguiente"),noMercy=document.getElementById("noMercy"),audioClash=document.getElementById("audioClash"),audioFallen=document.getElementById("audioFallen"),audioVictoria=document.getElementById("audioVictoria");
 
-let pagina=1,nombreHilbert="",timerStart=null,startDisponible=false;
-let tipoClash=null,terminado=true,turnoOcupado=false;
-
-let hpHilbert=85;
-let hpSkybound=75;
-let hpSkybounds=[75,75,75];
-
-let pacienciaPapa=100;
-let turnoSky=0;
-
-let hpFallen=850;
-let hpHilbertFallen=110;
-let hpSamanthaFallen=100;
-
-const contenido=document.getElementById("contenido");
-const texto=document.getElementById("texto");
-const vida=document.getElementById("vida");
-const barraNormal=document.getElementById("barraNormal");
-const barrasTres=document.getElementById("barrasTres");
-const barrasFallen=document.getElementById("barrasFallen");
-const nombreE=document.getElementById("nombreE");
-
-const barraUnica=document.getElementById("barraUnica");
-const hp=document.getElementById("hp");
-
-const barraSky1=document.getElementById("barraSky1");
-const barraSky2=document.getElementById("barraSky2");
-const barraSky3=document.getElementById("barraSky3");
-const hpTres=document.getElementById("hpTres");
-
-const barraFallen=document.getElementById("barraFallen");
-const barraHilbertFallen=document.getElementById("barraHilbertFallen");
-const barraSamanthaFallen=document.getElementById("barraSamanthaFallen");
-
-const hpFallenTexto=document.getElementById("hpFallen");
-const hpHilbertFallenTexto=document.getElementById("hpHilbertFallen");
-const hpSamanthaFallenTexto=document.getElementById("hpSamanthaFallen");
-
-const acciones=document.getElementById("acciones");
-const botonHablar=document.getElementById("botonHablar");
-const botonAtacar=document.getElementById("botonAtacar");
-const botonHuir=document.getElementById("botonHuir");
-
-const startButton=document.getElementById("startButton");
-const nombreBoton=document.getElementById("nombreBoton");
-const nombreBox=document.getElementById("nombreBox");
-const nombreInput=document.getElementById("nombreInput");
-
-const botonAnterior=document.getElementById("botonAnterior");
-const botonSiguiente=document.getElementById("botonSiguiente");
-const noMercy=document.getElementById("noMercy");
-
-const audioClash=document.getElementById("audioClash");
-const audioFallen=document.getElementById("audioFallen");
-const audioVictoria=document.getElementById("audioVictoria");
-
-/* DIÁLOGOS ORIGINALES */
 const textos=[
-"En un mundo muy lejano...",
-"Espera un poco más cerca",
-"Más cerca!",
-"Ahí sí, de ese hablo...",
-"el inicio...",
-"Este chico tiene miedo.",
-"A {NOMBRE} le ha gustado ese nombre!",
-"¿Uh? {NOMBRE}, ¿a dónde vas {NOMBRE}?",
-"{NOMBRE}: Mmm...|||bueno,supongo que mientras {NOMBRE} tiene una uh,¿crisis mental? daremos unos pequeños datos sobre el!su mote es IC y hoy es el cumpleaños de su amigo FV",
-"{NOMBRE}: Creo que debería levantarme.",
-"{NOMBRE}: ...",
-"{NOMBRE}: cierto!hoy es el cumple de FV! ademas hoy era uhhh...si! el lanzamiento de The Big Sky!",
-"{NOMBRE}: voy a hablar en el chat!",
-"...",
-"{NOMBRE}: UGH,PARA QUE ESTE TONTO DE WARDEN QUIERE QUE VEAMOS EL BUZON?! ME TENDRE QUE ENCONTRAR CON MI PADRE Y NO QUIERO ESO! UGHHH",
-"{NOMBRE}: bueno,ya que,primero agarrare mi palanca si,espero no encontrarme a ese viejo...",
-"...",
-"{NOMBRE}: espero que no me escuche bajar las escaleras...",
-"mientras nuestro pequeño {NOMBRE} bajaba las escaleras...porque no mejor nos convertimos en ese tal warden?",
-"oh,es tan misterioso y cool que no podemos?bueno,supongo que seguiremos viendo a este pequeño heroe...",
-"AAAAAAAAAAAAAAAAAAAAAAAA",
-"",
-"...",
-"{NOMBRE}: es una mierda!",
-"",
-"veamos si funciona!",
-"...",
-"el clash",
-"{NOMBRE}:heh...gane! o eso creo...",
-"{NOMBRE}: uh? el juego esta listo!",
-"loading...",
-"IC: huh? y ese ruido?",
-"IC:sera mejor que valla a revisar creo...",
-"IC: WTF",
-"IC:Siento que hay alfo detras de mi...",
-"IC: AAAAAAAAA",
-"Clash!",
-"Ahora eres Samantha,tu mote es HS,tienes 13 años y eres la mayor del grupo.",
-"Tu arma son los revolveres!",
-"aunque el tonto de Warden te molesta con que eres una vaquera...",
-"Que fastidio!",
-"Lo bueno es que Warden te dejo algo en el buzon,vamos a ver que es!",
-"...",
-"Despues de esa pelea epica vuelves a tu habitacion pero estaba custodiada por 3 Skybounders!",
-"Decides ir a la Skyfusion.",
-"Pones tu palanca y hierro.",
-"...",
-"Consigues la palanca de uña! Tus stats han mejorado.",
-"IC: jeh,jodanse ustedes 3!",
-"Clash!",
-"IC:HELLL YAAAAHAHHAHHHH||| HS:uhhhmm chiken respooondeee???chiken???||| IC:uh? que paso star?||| HS:Estaba pensando en que podria ir a...verte!||| IC:suena cool!,te veo despues :D",
-"IC: uh? star ya esta fuera!",
-"IC: Hey star!||| HS:heya chiken!",
-"muuuuchaaa conversacion despues..",
-"IC: y bueno como te- uh? que fue eso?",
-"IC: AAAAAAA||| HS:AAAAAAAA",
-"clash!",
-"...",
-"IC:QUE MIERDA PASO?!?!",
-"HS:uhhhm,cual es tu nombre chiken? el mio es samantha!||| IC: el mio es {NOMBRE}!",
-"HS:mucho gusto {NOMBRE}!",
-"...",
-"fin del acto 1!",
-"empezar acto 2!",
-"{NOMBRE}: adios sam!",
-"{NOMBRE}: uh? que fue eso?",
-"{NOMBRE}:sera mejor que valla a ver...",
-"{NOMBRE}:OH",
-"{NOMBRE}: creo que deberia devolverme...",
-"{NOMBRE}: MIERDA",
-"...",
-"{NOMBRE}:ODIOS PORFAVOR NO",
-"{NOMBRE}: AAAAAAAAA",
-"{NOMBRE}:uh? QUIEN ERES?!?!||| ???:hola si ok",
-"???:mi nombre es samm!",
-"{NOMBRE}: bueno...PODRIAMOS DEJAR DE HABLAR Y INTENTAR QUE ESTAS COSAS NO ME MATEN?!?!||| samm:ok",
-"",
-"",
-"",
-""
-];
+"En un mundo muy lejano...","Espera un poco más cerca","Más cerca!","Ahí sí, de ese hablo...","el inicio...","Este chico tiene miedo.","A {NOMBRE} le ha gustado ese nombre!","¿Uh? {NOMBRE}, ¿a dónde vas {NOMBRE}?","{NOMBRE}: Mmm...|||bueno,supongo que mientras {NOMBRE} tiene una uh,¿crisis mental? daremos unos pequeños datos sobre el!su mote es IC y hoy es el cumpleaños de su amigo FV","{NOMBRE}: Creo que debería levantarme.","{NOMBRE}: ...","{NOMBRE}: cierto!hoy es el cumple de FV! ademas hoy era uhhh...si! el lanzamiento de The Big Sky!","{NOMBRE}: voy a hablar en el chat!","...","{NOMBRE}: UGH,PARA QUE ESTE TONTO DE WARDEN QUIERE QUE VEAMOS EL BUZON?! ME TENDRE QUE ENCONTRAR CON MI PADRE Y NO QUIERO ESO! UGHHH","{NOMBRE}: bueno,ya que,primero agarrare mi palanca si,espero no encontrarme a ese viejo...","...","{NOMBRE}: espero que no me escuche bajar las escaleras...","mientras nuestro pequeño {NOMBRE} bajaba las escaleras...porque no mejor nos convertimos en ese tal warden?","oh,es tan misterioso y cool que no podemos?bueno,supongo que seguiremos viendo a este pequeño heroe...","AAAAAAAAAAAAAAAAAAAAAAAA","","...","{NOMBRE}: es una mierda!","","veamos si funciona!","...","el clash","{NOMBRE}:heh...gane! o eso creo...","{NOMBRE}: uh? el juego esta listo!","loading...","IC: huh? y ese ruido?","IC:sera mejor que valla a revisar creo...","IC: WTF","IC:Siento que hay alfo detras de mi...","IC: AAAAAAAAA","Clash!","Ahora eres Samantha,tu mote es HS,tienes 13 años y eres la mayor del grupo.","Tu arma son los revolveres!","aunque el tonto de Warden te molesta con que eres una vaquera...","Que fastidio!","Lo bueno es que Warden te dejo algo en el buzon,vamos a ver que es!","...","Despues de esa pelea epica vuelves a tu habitacion pero estaba custodiada por 3 Skybounders!","Decides ir a la Skyfusion.","Pones tu palanca y hierro.","...","Consigues la palanca de uña! Tus stats han mejorado.","IC: jeh,jodanse ustedes 3!","Clash!","IC:HELLL YAAAAHAHHAHHHH||| HS:uhhhmm chiken respooondeee???chiken???||| IC:uh? que paso star?||| HS:Estaba pensando en que podria ir a...verte!||| IC:suena cool!,te veo despues :D","IC: uh? star ya esta fuera!","IC: Hey star!||| HS:heya chiken!","muuuuchaaa conversacion despues..","IC: y bueno como te- uh? que fue eso?","IC: AAAAAAA||| HS:AAAAAAAA","clash!","...","IC:QUE MIERDA PASO?!?!","HS:uhhhm,cual es tu nombre chiken? el mio es samantha!||| IC: el mio es {NOMBRE}!","HS:mucho gusto {NOMBRE}!","...","fin del acto 1!","empezar acto 2!","{NOMBRE}: adios sam!","{NOMBRE}: uh? que fue eso?","{NOMBRE}:sera mejor que valla a ver...","{NOMBRE}:OH","{NOMBRE}: creo que deberia devolverme...","{NOMBRE}: MIERDA","...","{NOMBRE}:ODIOS PORFAVOR NO","{NOMBRE}: AAAAAAAAA","{NOMBRE}:uh? QUIEN ERES?!?!||| ???:hola si ok","???:mi nombre es samm!","{NOMBRE}: bueno...PODRIAMOS DEJAR DE HABLAR Y INTENTAR QUE ESTAS COSAS NO ME MATEN?!?!||| samm:ok","","","",""
+];while(textos.length<TOTAL)textos.push("");
 
-while(textos.length<TOTAL)textos.push("");
+function nombre(){return nombreHilbert.trim()||"Hilbert"}function esc(s){return s.replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x]))}
+function clase(s){let n=nombre();if(s.startsWith("IC:")||s.startsWith(n+":"))return"dialogoIC";if(s.startsWith("HS:"))return"dialogoHS";if(s.startsWith("WP:"))return"dialogoWP";if(s.startsWith("FV:"))return"dialogoFV";return""}
+function mostrarTexto(t){t=t.replace(/\{NOMBRE\}/g,nombre());return t.split("|||").map(b=>b.split("\n").map(x=>x.trim()?`<div class="linea ${clase(x)}">${esc(x)}</div>`:"").join("")).join("")}
+function guardar(){localStorage.setItem("TheBigSKY_Save",JSON.stringify({pagina,nombreHilbert}))}
+try{let s=JSON.parse(localStorage.getItem("TheBigSKY_Save"));if(s&&typeof s.pagina==="number"&&s.pagina>=1&&s.pagina<=TOTAL)pagina=s.pagina;if(s&&typeof s.nombreHilbert==="string")nombreHilbert=s.nombreHilbert}catch(e){}
+function gif(n){contenido.innerHTML=`<img src="${n}.gif" alt="${n}">`}
+function musicaOn(){audioClash.currentTime=0;audioClash.play().catch(()=>{})}
+function musicaFallenOn(){audioFallen.currentTime=0;audioFallen.play().catch(()=>{})}
+function musicaOff(){audioClash.pause();audioClash.currentTime=0;audioFallen.pause();audioFallen.currentTime=0}
+function victoriaSonido(){audioVictoria.currentTime=0;audioVictoria.play().catch(()=>{})}
+  function actualizarBarra(){let a,m;if(tipoClash==="papa"){a=pacienciaPapa;m=100}else{a=hpSkybound;m=75}barraUnica.style.width=Math.max(0,a/m*100)+"%";hp.textContent=a+"/"+m}
+function actualizarTres(){barraSky1.style.width=Math.max(0,hpSkybounds[0]/75*100)+"%";barraSky2.style.width=Math.max(0,hpSkybounds[1]/75*100)+"%";barraSky3.style.width=Math.max(0,hpSkybounds[2]/75*100)+"%";hpTres.textContent="HP de Hilbert: "+hpHilbert+"/110"}
+function actualizarFallen(){barraFallen.style.width=Math.max(0,hpFallen/850*100)+"%";barraHilbertFallen.style.width=Math.max(0,hpHilbertFallen/110*100)+"%";barraSamanthaFallen.style.width=Math.max(0,hpSamanthaFallen/100*100)+"%";hpFallenTexto.textContent=hpFallen+"/850";hpHilbertFallenTexto.textContent=hpHilbertFallen+"/110";hpSamanthaFallenTexto.textContent=hpSamanthaFallen+"/100"}
 
-function nombre(){
-return nombreHilbert.trim()||"Hilbert";
-}
-
-function esc(s){
-return s.replace(/[&<>"']/g,x=>({
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#039;"
-}[x]));
-}
-
-function clase(s){
-let n=nombre();
-
-if(s.startsWith("IC:")||s.startsWith(n+":"))return"dialogoIC";
-if(s.startsWith("HS:"))return"dialogoHS";
-if(s.startsWith("WP:"))return"dialogoWP";
-if(s.startsWith("FV:"))return"dialogoFV";
-
-return"";
-}
-
-function mostrarTexto(t){
-t=t.replace(/\{NOMBRE\}/g,nombre());
-
-return t.split("|||").map(b=>b.split("\n").map(x=>
-x.trim()?`<div class="linea ${clase(x)}">${esc(x)}</div>`:""
-).join("")).join("");
-}
-
-function guardar(){
-localStorage.setItem("TheBigSKY_Save",JSON.stringify({
-pagina,
-nombreHilbert
-}));
-}
-try{
-let s=JSON.parse(localStorage.getItem("TheBigSKY_Save"));
-
-if(s&&typeof s.pagina==="number"&&s.pagina>=1&&s.pagina<=TOTAL)
-pagina=s.pagina;
-
-if(s&&typeof s.nombreHilbert==="string")
-nombreHilbert=s.nombreHilbert;
-
-}catch(e){}
-
-function gif(n){
-contenido.innerHTML=`<img src="${n}.gif" alt="${n}">`;
-}
-
-function musicaOn(){
-audioClash.currentTime=0;
-audioClash.play().catch(()=>{});
-}
-
-function musicaFallenOn(){
-audioFallen.currentTime=0;
-audioFallen.play().catch(()=>{});
-}
-
-function musicaOff(){
-audioClash.pause();
-audioClash.currentTime=0;
-
-audioFallen.pause();
-audioFallen.currentTime=0;
-}
-
-function victoriaSonido(){
-audioVictoria.currentTime=0;
-audioVictoria.play().catch(()=>{});
-}
-
-function actualizarBarra(){
-let actual,maximo;
-
-if(tipoClash==="papa"){
-actual=pacienciaPapa;
-maximo=100;
-}else{
-actual=hpSkybound;
-maximo=75;
-}
-
-barraUnica.style.width=Math.max(0,actual/maximo*100)+"%";
-hp.textContent=actual+"/"+maximo;
-}
-
-function actualizarTres(){
-barraSky1.style.width=Math.max(0,hpSkybounds[0]/75*100)+"%";
-barraSky2.style.width=Math.max(0,hpSkybounds[1]/75*100)+"%";
-barraSky3.style.width=Math.max(0,hpSkybounds[2]/75*100)+"%";
-
-hpTres.textContent="HP de Hilbert: "+hpHilbert+"/110";
-}
-
-function actualizarFallen(){
-barraFallen.style.width=Math.max(0,hpFallen/850*100)+"%";
-
-barraHilbertFallen.style.width=
-Math.max(0,hpHilbertFallen/110*100)+"%";
-
-barraSamanthaFallen.style.width=
-Math.max(0,hpSamanthaFallen/100*100)+"%";
-
-hpFallenTexto.textContent=hpFallen+"/850";
-hpHilbertFallenTexto.textContent=hpHilbertFallen+"/110";
-hpSamanthaFallenTexto.textContent=hpSamanthaFallen+"/100";
-}
-
-function iniciarPapa(){
-tipoClash="papa";
-terminado=false;
-turnoOcupado=false;
-
-pacienciaPapa=100;
-hpHilbert=85;
-
-vida.style.display="block";
-barraNormal.style.display="block";
-barrasTres.style.display="none";
-barrasFallen.style.display="none";
-
-nombreE.textContent="PACIENCIA DE PAPÁ";
-
-acciones.style.display="block";
-
-botonHablar.disabled=false;
-botonAtacar.disabled=false;
-botonHuir.disabled=false;
-
-noMercy.style.display="none";
-
-actualizarBarra();
-gif("escenaN");
-musicaOn();
-}
-
-function iniciarSky(){
-tipoClash="sky";
-terminado=false;
-turnoOcupado=false;
-
-hpHilbert=85;
-hpSkybound=75;
-
-vida.style.display="block";
-barraNormal.style.display="block";
-barrasTres.style.display="none";
-barrasFallen.style.display="none";
-
-nombreE.textContent="SKYBOUND";
-
-acciones.style.display="block";
-
-botonHablar.disabled=true;
-botonAtacar.disabled=false;
-botonHuir.disabled=false;
-
-noMercy.style.display="none";
-
-actualizarBarra();
-gif("escenaNS");
-musicaOn();
-}
-
-function iniciarTres(){
-tipoClash="tres";
-terminado=false;
-turnoOcupado=false;
-
-hpHilbert=110;
-hpSkybounds=[75,75,75];
-turnoSky=0;
-
-vida.style.display="block";
-barraNormal.style.display="none";
-barrasTres.style.display="block";
-barrasFallen.style.display="none";
-
-nombreE.textContent="SKYBOUNDS";
-
-acciones.style.display="block";
-
-botonHablar.disabled=true;
-botonAtacar.disabled=false;
-botonHuir.disabled=true;
-
-noMercy.style.display="block";
-
-actualizarTres();
-gif("escenaNS");
-musicaOn();
-}
-
-function iniciarFallen(){
-tipoClash="fallen";
-terminado=false;
-turnoOcupado=false;
-
-hpFallen=850;
-hpHilbertFallen=110;
-hpSamanthaFallen=100;
-
-vida.style.display="block";
-barraNormal.style.display="none";
-barrasTres.style.display="none";
-barrasFallen.style.display="block";
-
-nombreE.textContent="FALLEN";
-
-acciones.style.display="block";
-
-botonHablar.disabled=false;
-botonAtacar.disabled=false;
-botonHuir.disabled=true;
-
-noMercy.style.display="none";
-
-actualizarFallen();
-gif("escenaNF");
-musicaFallenOn();
-}
+function iniciarPapa(){tipoClash="papa";terminado=false;turnoOcupado=false;pacienciaPapa=100;hpHilbert=85;vida.style.display="block";barraNormal.style.display="block";barrasTres.style.display="none";barrasFallen.style.display="none";nombreE.textContent="PACIENCIA DE PAPÁ";acciones.style.display="block";botonHablar.disabled=false;botonAtacar.disabled=false;botonHuir.disabled=false;noMercy.style.display="none";actualizarBarra();gif("escenaN");musicaOn()}
+function iniciarSky(){tipoClash="sky";terminado=false;turnoOcupado=false;hpHilbert=85;hpSkybound=75;vida.style.display="block";barraNormal.style.display="block";barrasTres.style.display="none";barrasFallen.style.display="none";nombreE.textContent="SKYBOUND";acciones.style.display="block";botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=false;noMercy.style.display="none";actualizarBarra();gif("escenaNS");musicaOn()}
+function iniciarTres(){tipoClash="tres";terminado=false;turnoOcupado=false;hpHilbert=110;hpSkybounds=[75,75,75];turnoSky=0;vida.style.display="block";barraNormal.style.display="none";barrasTres.style.display="block";barrasFallen.style.display="none";nombreE.textContent="SKYBOUNDS";acciones.style.display="block";botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=true;noMercy.style.display="block";actualizarTres();gif("escenaNS");musicaOn()}
+function iniciarFallen(){tipoClash="fallen";terminado=false;turnoOcupado=false;hpFallen=850;hpHilbertFallen=110;hpSamanthaFallen=100;vida.style.display="block";barraNormal.style.display="none";barrasTres.style.display="none";barrasFallen.style.display="block";nombreE.textContent="FALLEN";acciones.style.display="block";botonHablar.disabled=false;botonAtacar.disabled=false;botonHuir.disabled=true;noMercy.style.display="none";actualizarFallen();gif("escenaNF");musicaFallenOn()}
 
 function atacar(){
 if(terminado||turnoOcupado)return;
-
-if(tipoClash==="papa"){
-pacienciaPapa=Math.max(0,pacienciaPapa-20);
-
-actualizarBarra();
-gif("escenaG");
-
-texto.innerHTML=
-`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;
-
-if(pacienciaPapa<=0){
-papaSeVa();
+if(tipoClash==="papa"){pacienciaPapa=Math.max(0,pacienciaPapa-20);actualizarBarra();gif("escenaG");texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;if(pacienciaPapa<=0)papaSeVa();return}
+if(tipoClash==="sky"){turnoOcupado=true;hpSkybound=Math.max(0,hpSkybound-20);actualizarBarra();gif("escenaGS");texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;if(hpSkybound<=0){skyDerrotado();return}setTimeout(ataqueSky,500);return}
+if(tipoClash==="tres"){turnoOcupado=true;let v=[];for(let i=0;i<3;i++)if(hpSkybounds[i]>0)v.push(i);if(!v.length){turnoOcupado=false;return}let o=v[turnoSky%v.length];hpSkybounds[o]=Math.max(0,hpSkybounds[o]-30);turnoSky++;actualizarTres();gif("escenaGS");texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;if(hpSkybounds.every(x=>x<=0)){tresDerrotados();return}setTimeout(ataqueTres,500);return}
+if(tipoClash==="fallen")atacarFallen()
 }
 
-return;
-}
-
-if(tipoClash==="sky"){
-turnoOcupado=true;
-
-hpSkybound=Math.max(0,hpSkybound-20);
-
-actualizarBarra();
-gif("escenaGS");
-
-texto.innerHTML=
-`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;
-
-if(hpSkybound<=0){
-skyDerrotado();
-return;
-}
-
-setTimeout(ataqueSky,500);
-return;
-}
-
-if(tipoClash==="tres"){
-turnoOcupado=true;
-
-let vivos=[];
-
-for(let i=0;i<3;i++){
-if(hpSkybounds[i]>0){
-vivos.push(i);
-}
-}
-
-if(!vivos.length){
-turnoOcupado=false;
-return;
-}
-
-let objetivo=vivos[turnoSky%vivos.length];
-
-hpSkybounds[objetivo]=
-Math.max(0,hpSkybounds[objetivo]-30);
-
-turnoSky++;
-
-actualizarTres();
-gif("escenaGS");
-
-texto.innerHTML=
-`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;
-
-if(hpSkybounds.every(x=>x<=0)){
-tresDerrotados();
-return;
-}
-
-setTimeout(ataqueTres,500);
-return;
-}
-
-if(tipoClash==="fallen"){
-atacarFallen();
-}
-}
-
-function ataqueSky(){
-if(terminado||tipoClash!=="sky"){
-turnoOcupado=false;
-return;
-}
-
-let d=Math.random()<0.5?25:30;
-
-hpHilbert=Math.max(0,hpHilbert-d);
-
-gif("escenaNS");
-
-texto.innerHTML=
-`<div class="linea">El Skybound ataca y hace ${d} de daño!<br>HP de Hilbert: ${hpHilbert}/85</div>`;
-
-actualizarBarra();
-
-if(hpHilbert<=0){
-derrota();
-return;
-}
-
-turnoOcupado=false;
-}
-
-function ataqueTres(){
-if(terminado||tipoClash!=="tres"){
-turnoOcupado=false;
-return;
-}
-
-let vivos=[];
-
-for(let i=0;i<3;i++){
-if(hpSkybounds[i]>0){
-vivos.push(i);
-}
-}
-
-if(!vivos.length){
-turnoOcupado=false;
-return;
-}
-
-let atacante=
-vivos[Math.floor(Math.random()*vivos.length)];
-
-/* LOS 3 SKYBOUNDS HACEN ENTRE 10 Y 15 DE DAÑO */
-let d=10+Math.floor(Math.random()*6);
-
-hpHilbert=Math.max(0,hpHilbert-d);
-
-gif("escenaNS");
-actualizarTres();
-
-texto.innerHTML=
-`<div class="linea">Skybound ${atacante+1} ataca y hace ${d} de daño!<br>HP de Hilbert: ${hpHilbert}/110</div>`;
-
-if(hpHilbert<=0){
-derrota();
-return;
-}
-
-turnoOcupado=false;
-}
-
-function dañoSamantha(){
-const daños=[30,35,40];
-
-return daños[Math.floor(Math.random()*daños.length)];
-}
-
-function dañoHilbert(){
-if(Math.random()<0.15){
-return 45;
-}
-
-return 30;
-}
-
-function atacarFallen(){
-if(terminado||turnoOcupado)return;
-
-turnoOcupado=true;
-
-let dañoH=0;
-let dañoS=0;
-
-if(hpHilbertFallen>0){
-dañoH=dañoHilbert();
-hpFallen=Math.max(0,hpFallen-dañoH);
-}
-
-if(hpSamanthaFallen>0){
-dañoS=dañoSamantha();
-hpFallen=Math.max(0,hpFallen-dañoS);
-}
-
-actualizarFallen();
-gif("escenaGF");
-
-texto.innerHTML=
-`<div class="linea dialogoIC">${esc(nombre())}: TOMA! (${dañoH} daño)</div>
-<div class="linea dialogoHS">Samantha: TOMA! (${dañoS} daño)</div>`;
-
-if(hpFallen<=0){
-fallenDerrotado();
-return;
-}
-
-setTimeout(ataqueFallen,500);
-}
-
-function ataqueFallen(){
-if(terminado||tipoClash!=="fallen"){
-turnoOcupado=false;
-return;
-}
-
-let vivos=[];
-
-if(hpHilbertFallen>0){
-vivos.push("Hilbert");
-}
-
-if(hpSamanthaFallen>0){
-vivos.push("Samantha");
-}
-
-if(!vivos.length){
-derrotaFallen();
-return;
-}
-
-if(Math.random()<0.30){
-gif("escenaNF");
-
-texto.innerHTML=
-`<div class="linea">¡FALLEN FALLÓ SU ATAQUE!</div>`;
-
-actualizarFallen();
-
-turnoOcupado=false;
-return;
-}
-
-let objetivo=
-vivos[Math.floor(Math.random()*vivos.length)];
-
-if(objetivo==="Hilbert"){
-hpHilbertFallen=
-Math.max(0,hpHilbertFallen-50);
-}else{
-hpSamanthaFallen=
-Math.max(0,hpSamanthaFallen-50);
-}
-
-actualizarFallen();
-gif("escenaNF");
-
-texto.innerHTML=
-`<div class="linea">Fallen ataca a ${objetivo} y hace 50 de daño!</div>`;
-
-if(hpHilbertFallen<=0&&hpSamanthaFallen<=0){
-derrotaFallen();
-return;
-}
-
-turnoOcupado=false;
-}
-function hablar(){
-if(terminado||turnoOcupado)return;
-
-if(tipoClash==="papa"){
-gif("escenaH");
-
-if(Math.random()<0.05){
-papaSeVa();
-return;
-}
-
-texto.innerHTML=
-`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`;
-
-return;
-}
-
-if(tipoClash==="fallen"){
-turnoOcupado=true;
-
-gif("escenaHF");
-
-if(Math.random()<0.005){
-fallenSeVa();
-return;
-}
-
-texto.innerHTML=
-`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`;
-
-setTimeout(ataqueFallen,500);
-return;
-}
-}
-
-function huir(){
-if(terminado||tipoClash==="tres"||tipoClash==="fallen")return;
-
-gif(tipoClash==="papa"?"escenaHU":"escenaHUS");
-
-terminarClash();
-}
-
-function papaSeVa(){
-if(terminado)return;
-
-terminado=true;
-turnoOcupado=false;
-
-gif("escenaP");
-
-acciones.style.display="none";
-
-texto.innerHTML=
-"<div class='linea'>Papá se va.</div>";
-
-musicaOff();
-victoriaSonido();
-
-vida.style.display="none";
-}
-
-function skyDerrotado(){
-if(terminado)return;
-
-terminado=true;
-turnoOcupado=false;
-
-gif("escenaS");
-
-acciones.style.display="none";
-
-texto.innerHTML=
-"<div class='linea'>¡El Skybound fue derrotado!</div>";
-
-musicaOff();
-victoriaSonido();
-
-vida.style.display="none";
-}
-
-function tresDerrotados(){
-if(terminado)return;
-
-terminado=true;
-turnoOcupado=false;
-
-gif("escenaS");
-
-acciones.style.display="none";
-
-texto.innerHTML=
-"<div class='linea'>¡Los 3 Skybounds fueron derrotados!</div>";
-
-musicaOff();
-victoriaSonido();
-
-vida.style.display="none";
-}
-
-function fallenDerrotado(){
-if(terminado)return;
-
-terminado=true;
-turnoOcupado=false;
-
-gif("escenaXD");
-
-acciones.style.display="none";
-
-texto.innerHTML=
-"<div class='linea'>...</div>";
-
-musicaOff();
-victoriaSonido();
-
-vida.style.display="none";
-}
-
-function fallenSeVa(){
-if(terminado)return;
-
-terminado=true;
-turnoOcupado=false;
-
-gif("escenaXD");
-
-acciones.style.display="none";
-
-texto.innerHTML=
-"<div class='linea'>¡Fallen se fue!</div>";
-
-musicaOff();
-
-vida.style.display="none";
-}
-
-function derrotaFallen(){
-if(terminado)return;
-
-terminado=true;
-turnoOcupado=false;
-
-gif("escenaXD");
-
-acciones.style.display="none";
-
-texto.innerHTML=
-"<div class='linea'>¡Hilbert y Samantha perdieron!</div>";
-
-musicaOff();
-
-vida.style.display="none";
-}
-
-function derrota(){
-if(terminado)return;
-
-terminado=true;
-turnoOcupado=false;
-
-gif("escenaSG");
-
-acciones.style.display="none";
-
-texto.innerHTML=
-"<div class='linea'>¡Hilbert fue derrotado!</div>";
-
-musicaOff();
-
-vida.style.display="none";
-}
-
-function terminarClash(){
-terminado=true;
-turnoOcupado=false;
-
-acciones.style.display="none";
-vida.style.display="none";
-
-musicaOff();
-
-tipoClash=null;
-}
-
-function mostrarNombre(){
-nombreBox.style.display="block";
-}
-
-function confirmarNombre(){
-let n=nombreInput.value.trim();
-
-if(n)nombreHilbert=n;
-
-nombreBox.style.display="none";
-
-actualizar();
-}
-
-function iniciarTBS(){
-if(!startDisponible||pagina!==31)return;
-
-pagina=32;
-startDisponible=false;
-
-startButton.style.display="none";
-
-actualizar();
-}
-
-function irAnterior(){
-if(pagina<=1)return;
-
-if(timerStart)clearTimeout(timerStart);
-
-startDisponible=false;
-
-pagina--;
-
-actualizar();
-}
-
-function irSiguiente(){
-if(pagina>=TOTAL||pagina===31)return;
-
-pagina++;
-
-actualizar();
-}
-
-function preparar31(){
-startDisponible=false;
-
-botonAnterior.style.display="inline-block";
-botonSiguiente.style.display="none";
-startButton.style.display="none";
-
-if(timerStart)clearTimeout(timerStart);
-
-timerStart=setTimeout(()=>{
-if(pagina===31){
-startDisponible=true;
-startButton.style.display="inline-block";
-}
-},10000);
-}
+function ataqueSky(){if(terminado||tipoClash!=="sky"){turnoOcupado=false;return}let d=Math.random()<.5?25:30;hpHilbert=Math.max(0,hpHilbert-d);gif("escenaNS");texto.innerHTML=`<div class="linea">El Skybound ataca y hace ${d} de daño!<br>HP de Hilbert: ${hpHilbert}/85</div>`;actualizarBarra();if(hpHilbert<=0){derrota();return}turnoOcupado=false}
+function ataqueTres(){if(terminado||tipoClash!=="tres"){turnoOcupado=false;return}let v=[];for(let i=0;i<3;i++)if(hpSkybounds[i]>0)v.push(i);if(!v.length){turnoOcupado=false;return}let a=v[Math.floor(Math.random()*v.length)],d=10+Math.floor(Math.random()*6);hpHilbert=Math.max(0,hpHilbert-d);gif("escenaNS");actualizarTres();texto.innerHTML=`<div class="linea">Skybound ${a+1} ataca y hace ${d} de daño!<br>HP de Hilbert: ${hpHilbert}/110</div>`;if(hpHilbert<=0){derrota();return}turnoOcupado=false}
+
+function dañoSamantha(){let d=[30,35,40];return d[Math.floor(Math.random()*d.length)]}
+function dañoHilbert(){return Math.random()<.15?45:30}
+function atacarFallen(){if(terminado||turnoOcupado)return;turnoOcupado=true;let dH=0,dS=0;if(hpHilbertFallen>0){dH=dañoHilbert();hpFallen=Math.max(0,hpFallen-dH)}if(hpSamanthaFallen>0){dS=dañoSamantha();hpFallen=Math.max(0,hpFallen-dS)}actualizarFallen();gif("escenaGF");texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA! (${dH} daño)</div><div class="linea dialogoHS">Samantha: TOMA! (${dS} daño)</div>`;if(hpFallen<=0){fallenDerrotado();return}setTimeout(ataqueFallen,500)}
+
+function ataqueFallen(){if(terminado||tipoClash!=="fallen"){turnoOcupado=false;return}let v=[];if(hpHilbertFallen>0)v.push("Hilbert");if(hpSamanthaFallen>0)v.push("Samantha");if(!v.length){derrotaFallen();return}if(Math.random()<.30){gif("escenaNF");texto.innerHTML="<div class='linea'>¡FALLEN FALLÓ SU ATAQUE!</div>";actualizarFallen();turnoOcupado=false;return}let o=v[Math.floor(Math.random()*v.length)];if(o==="Hilbert")hpHilbertFallen=Math.max(0,hpHilbertFallen-50);else hpSamanthaFallen=Math.max(0,hpSamanthaFallen-50);actualizarFallen();gif("escenaNF");texto.innerHTML=`<div class="linea">Fallen ataca a ${o} y hace 50 de daño!</div>`;if(hpHilbertFallen<=0&&hpSamanthaFallen<=0){derrotaFallen();return}turnoOcupado=false}
+
+function hablar(){if(terminado||turnoOcupado)return;if(tipoClash==="papa"){gif("escenaH");if(Math.random()<.05){papaSeVa();return}texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`;return}if(tipoClash==="fallen"){turnoOcupado=true;gif("escenaHF");if(Math.random()<.005){fallenSeVa();return}texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`;setTimeout(ataqueFallen,500)}}
+function huir(){if(terminado||tipoClash==="tres"||tipoClash==="fallen")return;gif(tipoClash==="papa"?"escenaHU":"escenaHUS");terminarClash()}
+  function papaSeVa(){if(terminado)return;terminado=true;turnoOcupado=false;gif("escenaP");acciones.style.display="none";texto.innerHTML="<div class='linea'>Papá se va.</div>";musicaOff();victoriaSonido();vida.style.display="none"}
+function skyDerrotado(){if(terminado)return;terminado=true;turnoOcupado=false;gif("escenaS");acciones.style.display="none";texto.innerHTML="<div class='linea'>¡El Skybound fue derrotado!</div>";musicaOff();victoriaSonido();vida.style.display="none"}
+function tresDerrotados(){if(terminado)return;terminado=true;turnoOcupado=false;gif("escenaS");acciones.style.display="none";texto.innerHTML="<div class='linea'>¡Los 3 Skybounds fueron derrotados!</div>";musicaOff();victoriaSonido();vida.style.display="none"}
+function fallenDerrotado(){if(terminado)return;terminado=true;turnoOcupado=false;gif("escenaXD");acciones.style.display="none";texto.innerHTML="<div class='linea'>...</div>";musicaOff();victoriaSonido();vida.style.display="none"}
+function fallenSeVa(){if(terminado)return;terminado=true;turnoOcupado=false;gif("escenaXD");acciones.style.display="none";texto.innerHTML="<div class='linea'>¡Fallen se fue!</div>";musicaOff();vida.style.display="none"}
+function derrotaFallen(){if(terminado)return;terminado=true;turnoOcupado=false;gif("escenaXD");acciones.style.display="none";texto.innerHTML="<div class='linea'>¡Hilbert y Samantha perdieron!</div>";musicaOff();vida.style.display="none"}
+function derrota(){if(terminado)return;terminado=true;turnoOcupado=false;gif("escenaSG");acciones.style.display="none";texto.innerHTML="<div class='linea'>¡Hilbert fue derrotado!</div>";musicaOff();vida.style.display="none"}
+function terminarClash(){terminado=true;turnoOcupado=false;acciones.style.display="none";vida.style.display="none";musicaOff();tipoClash=null}
+function mostrarNombre(){nombreBox.style.display="block"}
+function confirmarNombre(){let n=nombreInput.value.trim();if(n)nombreHilbert=n;nombreBox.style.display="none";actualizar()}
+
+function preparar31(){startDisponible=false;botonAnterior.style.display="inline-block";botonSiguiente.style.display="none";startButton.style.display="none";if(timerStart)clearTimeout(timerStart);timerStart=setTimeout(()=>{if(pagina===31){startDisponible=true;startButton.style.display="inline-block"}},10000)}
 
 function actualizar(){
-
-if(timerStart){
-clearTimeout(timerStart);
-timerStart=null;
-}
-
-startDisponible=false;
-turnoOcupado=false;
-
-acciones.style.display="none";
-vida.style.display="none";
-
-botonHuir.disabled=false;
-botonHablar.disabled=false;
-botonAtacar.disabled=false;
-
-noMercy.style.display="none";
-
-musicaOff();
-
-tipoClash=null;
-terminado=true;
-
-document.body.style.background=
-pagina<=5?"#000":"#F4FBFF";
-
-document.body.style.color=
-pagina<=5?"#fff":"#152B3A";
-
+if(timerStart){clearTimeout(timerStart);timerStart=null}
+startDisponible=false;turnoOcupado=false;acciones.style.display="none";vida.style.display="none";
+botonHuir.disabled=false;botonHablar.disabled=false;botonAtacar.disabled=false;noMercy.style.display="none";musicaOff();tipoClash=null;terminado=true;
+document.body.style.background=pagina<=5?"#000":"#F4FBFF";document.body.style.color=pagina<=5?"#fff":"#152B3A";
 let n=String(pagina).padStart(3,"0");
+if(pagina===5)contenido.innerHTML='<video controls autoplay playsinline><source src="pelea.mp4" type="video/mp4"></video>';
+else if(pagina===71)contenido.innerHTML='<video controls autoplay playsinline><source src="hilbertSHIT.mp4" type="video/mp4"></video>';
+else if(pagina===22)contenido.innerHTML='<video controls autoplay playsinline><source src="TBS.mp4" type="video/mp4"></video>';
+else if(pagina===31)contenido.innerHTML='<video controls autoplay playsinline><source src="loadingTBS.mp4" type="video/mp4"></video>';
+else if(pagina===58)contenido.innerHTML='<video controls autoplay playsinline><source src="Fallenwin.mp4" type="video/mp4"></video>';
+else contenido.innerHTML=`<img src="${n}.png" alt="Página ${pagina}">`;
 
-if(pagina===5){
+if(pagina===28){texto.innerHTML="";iniciarPapa()}
+else if(pagina===37){texto.innerHTML="";iniciarSky()}
+else if(pagina===50){texto.innerHTML="";iniciarTres()}
+else if(pagina===57){texto.innerHTML="";iniciarFallen()}
+else texto.innerHTML=mostrarTexto(textos[pagina-1]||"");
 
-contenido.innerHTML=
-'<video controls autoplay playsinline><source src="pelea.mp4" type="video/mp4"></video>';
-
-}
-else if(pagina===71){
-
-contenido.innerHTML=
-'<video controls autoplay playsinline><source src="hilbertSHIT.mp4" type="video/mp4"></video>';
-
-}
-
-else if(pagina===22){
-
-contenido.innerHTML=
-'<video controls autoplay playsinline><source src="TBS.mp4" type="video/mp4"></video>';
-
-}
-else if(pagina===31){
-
-contenido.innerHTML=
-'<video controls autoplay playsinline><source src="loadingTBS.mp4" type="video/mp4"></video>';
-
-}
-else if(pagina===58){
-
-contenido.innerHTML=
-'<video controls autoplay playsinline><source src="Fallenwin.mp4" type="video/mp4"></video>';
-
-}
-else{
-
-contenido.innerHTML=
-`<img src="${n}.png" alt="Página ${pagina}">`;
-
-}
-
-if(pagina===28){
-
-texto.innerHTML="";
-iniciarPapa();
-
-}
-else if(pagina===37){
-
-texto.innerHTML="";
-iniciarSky();
-
-}
-else if(pagina===50){
-
-texto.innerHTML="";
-iniciarTres();
-
-}
-else if(pagina===57){
-
-texto.innerHTML="";
-iniciarFallen();
-
-}
-else{
-
-texto.innerHTML=
-mostrarTexto(textos[pagina-1]||"");
-
-}
-
-nombreBoton.style.display=
-pagina===6?"inline-block":"none";
-
-botonAnterior.style.display=
-pagina>1?"inline-block":"none";
-
-botonSiguiente.style.display=
-pagina<TOTAL&&pagina!==31?"inline-block":"none";
-
+nombreBoton.style.display=pagina===6?"inline-block":"none";
+botonAnterior.style.display=pagina>1?"inline-block":"none";
+botonSiguiente.style.display=pagina<TOTAL&&pagina!==31?"inline-block":"none";
 startButton.style.display="none";
-
-if(pagina===31){
-preparar31();
-}
-
+if(pagina===31)preparar31();
 guardar();
 }
 
-actualizar();
+function irAnterior(){if(pagina>1){pagina--;actualizar()}}
+function irSiguiente(){if(pagina<TOTAL&&pagina!==31){pagina++;actualizar()}}
+function iniciarTBS(){if(pagina===31&&startDisponible){pagina++;actualizar()}}
 
-</script>
-</body>
-</html>
+actualizar();
+</script></body></html>
