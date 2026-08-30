@@ -64,6 +64,30 @@ button{font-size:20px;padding:10px 18px;margin:6px 4px;cursor:pointer}
 #samOver{display:none;position:fixed;inset:0;background:#000;z-index:100;align-items:center;justify-content:center;flex-direction:column;font-size:28px}
 @keyframes samspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .samRot{animation:samspin 2s linear infinite}
+
+/* FLECHAS PARA MOVER EL ALMA */
+#samControls{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+margin:8px auto;
+user-select:none;
+}
+.samRow{display:flex;justify-content:center}
+.samMove{
+width:58px;
+height:48px;
+padding:0;
+margin:2px;
+background:#000;
+color:#fff;
+border:2px solid #fff;
+font-size:25px;
+font-weight:bold;
+touch-action:manipulation;
+}
+.samMove:active{background:#fff;color:#000}
 </style>
 </head>
 <body>
@@ -160,7 +184,20 @@ button{font-size:20px;padding:10px 18px;margin:6px 4px;cursor:pointer}
 <button onclick="samCloseAttack()">CANCELAR</button>
 </div>
 </div>
-<div id="samPHP">SAMANTHA — ❤️ <span id="samHP">100</span>/100</div>
+
+<!-- CONTROLES DEL ALMA -->
+<div id="samControls">
+<div class="samRow">
+<button class="samMove" onclick="samPos(sx,sy-4)">▲</button>
+</div>
+<div class="samRow">
+<button class="samMove" onclick="samPos(sx-4,sy)">◀</button>
+<button class="samMove" onclick="samPos(sx,sy+4)">▼</button>
+<button class="samMove" onclick="samPos(sx+4,sy)">▶</button>
+</div>
+</div>
+
+<div id="samPHP">SAMANTHA —  <span id="samHP">100</span>/100</div>
 <div id="samClick"><div>¡CLICKS! <span id="samClicks">0</span>/25 — <span id="samSecs">7.0</span>s</div><div id="samClickBar"><div id="samClickFill"></div></div></div>
 <div class="samBtns">
 <button id="samAtkBtn" onclick="samAttackMenu()">ATACAR</button>
@@ -173,7 +210,7 @@ button{font-size:20px;padding:10px 18px;margin:6px 4px;cursor:pointer}
 <div id="samOver"><div id="samResult"></div><button onclick="samReset()">REINTENTAR</button></div>
 <audio id="samMusic" src="clash.mp3" loop></audio>
 <script>
-   const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id);
 let pagina=1,nombreHilbert="",timerStart=null,startDisponible=false;
 let tipoClash=null,terminado=true,turnoOcupado=false;
 let hpHilbert=85,hpSkybound=75,hpSkybounds=[75,75,75],pacienciaPapa=100,turnoSky=0;
@@ -194,6 +231,7 @@ const botonAnterior=$("botonAnterior"),botonSiguiente=$("botonSiguiente"),noMerc
 const audioClash=$("audioClash"),audioFallen=$("audioFallen"),audioVictoria=$("audioVictoria");
 
 const TOTAL=105;
+
 const textos=[
 "En un mundo muy lejano...","Espera un poco más cerca","Más cerca!","Ahí sí, de ese hablo...","el inicio...",
 "Este chico tiene miedo.","A {NOMBRE} le ha gustado ese nombre!","¿Uh? {NOMBRE}, ¿a dónde vas {NOMBRE}?",
@@ -236,16 +274,37 @@ const textos=[
 "Hilbert: oye sin ojos de mrd||| Rim:como me dijiste?!||| Hilbert: se que toda la mierda que ahora está pasando es tu culpa! Porque un cabron de mrd estaría en un búnker a mitad de que el cielo de mierda se parte?!|||Rim:callate de una vez!|||Hilbert:si me intentas hacer callar,que sea en una pelea!",
 "Samantha:chau cosas feas!",""
 ];
+
 while(textos.length<TOTAL)textos.push("");
 
 const nombres={5:"[V]: el inicio",22:"[V]: ver el buzón",31:"[V]: loading",58:"[V]: The Fallen...",28:"[C]: Clash!",37:"[C]: Skybound!",50:"[C]: More Skybounds?!",57:"[C]: The Fallen...",77:"[V]: ???",78:"[C]: Samm + Hilbert vs 2 Fallen",92:"[V]: vs Rim",94:"[C]: Samantha vs Skybounds"};
-const videos={5:"pelea.mp4",22:"TBS.mp4",31:"loadingTBS.mp4",58:"Fallenwin.mp4",71:"hilbertSHIT.mp4",77:"something.mp4",92:"vsrim.mp4"};
+
+const videos={
+5:"pelea.mp4",
+22:"TBS.mp4",
+31:"loadingTBS.mp4",
+58:"Fallenwin.mp4",
+71:"hilbertSHIT.mp4",
+77:"something.mp4",
+92:"vsrim.mp4"
+};
 
 function nombre(){return nombreHilbert.trim()||"Hilbert"}
 function esc(s){return String(s).replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x]))}
-function clase(s){let n=nombre();if(s.startsWith("IC:")||s.startsWith(n+":")||s.startsWith("Hilbert:"))return"dialogoIC";if(s.startsWith("HS:")||s.startsWith("Samantha:"))return"dialogoHS";if(s.startsWith("WP:"))return"dialogoWP";if(s.startsWith("FV:"))return"dialogoFV";return""}
-function mostrarTexto(t){return t.replace(/\{NOMBRE\}/g,nombre()).split("|||").map(b=>b.split("\n").map(x=>x.trim()?`<div class="linea ${clase(x)}">${esc(x)}</div>`:"").join("")).join("")}
-function guardar(){try{localStorage.setItem("TheBigSKY_Save",JSON.stringify({pagina,nombreHilbert}))}catch(e){}}
+function clase(s){
+let n=nombre();
+if(s.startsWith("IC:")||s.startsWith(n+":")||s.startsWith("Hilbert:"))return"dialogoIC";
+if(s.startsWith("HS:")||s.startsWith("Samantha:"))return"dialogoHS";
+if(s.startsWith("WP:"))return"dialogoWP";
+if(s.startsWith("FV:"))return"dialogoFV";
+return""
+}
+function mostrarTexto(t){
+return t.replace(/\{NOMBRE\}/g,nombre()).split("|||").map(b=>b.split("\n").map(x=>x.trim()?`<div class="linea ${clase(x)}">${esc(x)}</div>`:"").join("")).join("")
+}
+function guardar(){
+try{localStorage.setItem("TheBigSKY_Save",JSON.stringify({pagina,nombreHilbert}))}catch(e){}
+}
 
 try{
 let s=JSON.parse(localStorage.getItem("TheBigSKY_Save"));
@@ -254,138 +313,266 @@ if(s&&typeof s.nombreHilbert==="string")nombreHilbert=s.nombreHilbert;
 }catch(e){}
 
 function gif(n){contenido.innerHTML=`<img src="${esc(n)}.gif" alt="${esc(n)}">`}
-function musicaOn(){audioFallen.pause();audioFallen.currentTime=0;audioClash.currentTime=0;audioClash.play().catch(()=>{})}
-function musicaFallenOn(){audioClash.pause();audioClash.currentTime=0;audioFallen.currentTime=0;audioFallen.play().catch(()=>{})}
-function musicaOff(){audioClash.pause();audioClash.currentTime=0;audioFallen.pause();audioFallen.currentTime=0}
-function victoriaSonido(){audioVictoria.currentTime=0;audioVictoria.play().catch(()=>{})}
+function musicaOn(){
+audioFallen.pause();audioFallen.currentTime=0;
+audioClash.currentTime=0;audioClash.play().catch(()=>{})
+}
+function musicaFallenOn(){
+audioClash.pause();audioClash.currentTime=0;
+audioFallen.currentTime=0;audioFallen.play().catch(()=>{})
+}
+function musicaOff(){
+audioClash.pause();audioClash.currentTime=0;
+audioFallen.pause();audioFallen.currentTime=0
+}
+function victoriaSonido(){
+audioVictoria.currentTime=0;
+audioVictoria.play().catch(()=>{})
+}
 
 function actualizarBarra(){
 let a=tipoClash==="papa"?pacienciaPapa:hpSkybound,m=tipoClash==="papa"?100:75;
-barraUnica.style.width=Math.max(0,a/m*100)+"%";hp.textContent=a+"/"+m
+barraUnica.style.width=Math.max(0,a/m*100)+"%";
+hp.textContent=a+"/"+m
 }
+
 function actualizarTres(){
 barraSky1.style.width=Math.max(0,hpSkybounds[0]/75*100)+"%";
 barraSky2.style.width=Math.max(0,hpSkybounds[1]/75*100)+"%";
 barraSky3.style.width=Math.max(0,hpSkybounds[2]/75*100)+"%";
 hpTres.textContent="HP de Hilbert: "+hpHilbert+"/110"
 }
+
 function actualizarFallen(){
 barraFallenEl.style.width=Math.max(0,hpFallen/850*100)+"%";
 barraHilbertFallen.style.width=Math.max(0,hpHilbertFallen/110*100)+"%";
 barraSamanthaFallen.style.width=Math.max(0,hpSamanthaFallen/100*100)+"%";
-hpFallenTexto.textContent=hpFallen+"/850";hpHilbertFallenTexto.textContent=hpHilbertFallen+"/110";hpSamanthaFallenTexto.textContent=hpSamanthaFallen+"/100"
+hpFallenTexto.textContent=hpFallen+"/850";
+hpHilbertFallenTexto.textContent=hpHilbertFallen+"/110";
+hpSamanthaFallenTexto.textContent=hpSamanthaFallen+"/100"
 }
+
 function actualizarFallen78(){
 barraFallen1.style.width=Math.max(0,hpFallen1/850*100)+"%";
 barraFallen2El.style.width=Math.max(0,hpFallen2/850*100)+"%";
 barraHilbert78.style.width=Math.max(0,hpHilbert78/110*100)+"%";
-hpFallen1Texto.textContent=hpFallen1+"/850";hpFallen2Texto.textContent=hpFallen2+"/850";hpHilbert78Texto.textContent=hpHilbert78+"/110"
+hpFallen1Texto.textContent=hpFallen1+"/850";
+hpFallen2Texto.textContent=hpFallen2+"/850";
+hpHilbert78Texto.textContent=hpHilbert78+"/110"
 }
 
 function abrirMapa(){$("mapa").style.display="block"}
 function cerrarMapa(){$("mapa").style.display="none"}
 function irMapa(p){cerrarMapa();pagina=p;actualizar()}
 function mostrarNombre(){$("nombreBox").style.display="block";nombreInput.focus()}
-function confirmarNombre(){let n=nombreInput.value.trim();if(n)nombreHilbert=n;nombreBox.style.display="none";actualizar()}
+function confirmarNombre(){
+let n=nombreInput.value.trim();
+if(n)nombreHilbert=n;
+nombreBox.style.display="none";
+actualizar()
+}
 
 function iniciarPapa(){
-tipoClash="papa";terminado=false;turnoOcupado=false;pacienciaPapa=100;hpHilbert=85;
-vida.style.display="block";barraNormal.style.display="block";barrasTres.style.display=barrasFallen.style.display=barrasFallen2.style.display="none";
+tipoClash="papa";terminado=false;turnoOcupado=false;
+pacienciaPapa=100;hpHilbert=85;
+vida.style.display="block";barraNormal.style.display="block";
+barrasTres.style.display=barrasFallen.style.display=barrasFallen2.style.display="none";
 nombreE.textContent="PACIENCIA DE PAPÁ";acciones.style.display="block";
-botonHablar.disabled=botonAtacar.disabled=botonHuir.disabled=false;noMercy.style.display="none";actualizarBarra();gif("escenaN");musicaOn()
+botonHablar.disabled=botonAtacar.disabled=botonHuir.disabled=false;
+noMercy.style.display="none";actualizarBarra();gif("escenaN");musicaOn()
 }
+
 function iniciarSky(){
-tipoClash="sky";terminado=false;turnoOcupado=false;hpHilbert=85;hpSkybound=75;
-vida.style.display="block";barraNormal.style.display="block";barrasTres.style.display=barrasFallen.style.display=barrasFallen2.style.display="none";
-nombreE.textContent="SKYBOUND";acciones.style.display="block";botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=false;noMercy.style.display="none";
-actualizarBarra();gif("escenaNS");musicaOn()
+tipoClash="sky";terminado=false;turnoOcupado=false;
+hpHilbert=85;hpSkybound=75;
+vida.style.display="block";barraNormal.style.display="block";
+barrasTres.style.display=barrasFallen.style.display=barrasFallen2.style.display="none";
+nombreE.textContent="SKYBOUND";acciones.style.display="block";
+botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=false;
+noMercy.style.display="none";actualizarBarra();gif("escenaNS");musicaOn()
 }
+
 function iniciarTres(){
-tipoClash="tres";terminado=false;turnoOcupado=false;hpHilbert=110;hpSkybounds=[75,75,75];turnoSky=0;
-vida.style.display="block";barraNormal.style.display="none";barrasTres.style.display="block";barrasFallen.style.display=barrasFallen2.style.display="none";
-nombreE.textContent="SKYBOUNDS";acciones.style.display="block";botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=true;noMercy.style.display="block";
-actualizarTres();gif("escenaNS");musicaOn()
+tipoClash="tres";terminado=false;turnoOcupado=false;
+hpHilbert=110;hpSkybounds=[75,75,75];turnoSky=0;
+vida.style.display="block";barraNormal.style.display="none";
+barrasTres.style.display="block";barrasFallen.style.display=barrasFallen2.style.display="none";
+nombreE.textContent="SKYBOUNDS";acciones.style.display="block";
+botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=true;
+noMercy.style.display="block";actualizarTres();gif("escenaNS");musicaOn()
 }
+
 function iniciarFallen(){
-tipoClash="fallen";terminado=false;turnoOcupado=false;hpFallen=850;hpHilbertFallen=110;hpSamanthaFallen=100;
-vida.style.display="block";barraNormal.style.display="none";barrasTres.style.display=barrasFallen2.style.display="none";barrasFallen.style.display="block";
-nombreE.textContent="FALLEN";acciones.style.display="block";botonHablar.disabled=false;botonAtacar.disabled=false;botonHuir.disabled=true;
+tipoClash="fallen";terminado=false;turnoOcupado=false;
+hpFallen=850;hpHilbertFallen=110;hpSamanthaFallen=100;
+vida.style.display="block";barraNormal.style.display="none";
+barrasTres.style.display=barrasFallen2.style.display="none";
+barrasFallen.style.display="block";
+nombreE.textContent="FALLEN";acciones.style.display="block";
+botonHablar.disabled=false;botonAtacar.disabled=false;botonHuir.disabled=true;
 actualizarFallen();gif("escenaNF");musicaFallenOn()
 }
+
 function iniciarFallen78(){
-tipoClash="fallen78";terminado=false;turnoOcupado=false;hpFallen1=850;hpFallen2=850;hpHilbert78=110;
-vida.style.display="block";barraNormal.style.display="none";barrasTres.style.display=barrasFallen.style.display="none";barrasFallen2.style.display="block";
-nombreE.textContent="FALLEN";acciones.style.display="block";botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=true;
+tipoClash="fallen78";terminado=false;turnoOcupado=false;
+hpFallen1=850;hpFallen2=850;hpHilbert78=110;
+vida.style.display="block";barraNormal.style.display="none";
+barrasTres.style.display=barrasFallen.style.display="none";
+barrasFallen2.style.display="block";
+nombreE.textContent="FALLEN";acciones.style.display="block";
+botonHablar.disabled=true;botonAtacar.disabled=false;botonHuir.disabled=true;
 actualizarFallen78();gif("normal");musicaFallenOn()
 }
 
 function atacar(){
 if(terminado||turnoOcupado)return;
-if(tipoClash==="papa"){pacienciaPapa=Math.max(0,pacienciaPapa-20);actualizarBarra();gif("escenaG");texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;if(pacienciaPapa<=0)papaSeVa();return}
-if(tipoClash==="sky"){turnoOcupado=true;hpSkybound=Math.max(0,hpSkybound-20);actualizarBarra();gif("escenaGS");texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;if(hpSkybound<=0)return skyDerrotado();setTimeout(ataqueSky,500);return}
-if(tipoClash==="tres"){
-turnoOcupado=true;let v=[0,1,2].filter(i=>hpSkybounds[i]>0);if(!v.length)return;
-let o=v[turnoSky++%v.length];hpSkybounds[o]=Math.max(0,hpSkybounds[o]-30);actualizarTres();gif("escenaGS");
+
+if(tipoClash==="papa"){
+pacienciaPapa=Math.max(0,pacienciaPapa-20);
+actualizarBarra();gif("escenaG");
 texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;
-if(hpSkybounds.every(x=>x<=0))return tresDerrotados();setTimeout(ataqueTres,500);return
+if(pacienciaPapa<=0)papaSeVa();
+return
 }
+
+if(tipoClash==="sky"){
+turnoOcupado=true;hpSkybound=Math.max(0,hpSkybound-20);
+actualizarBarra();gif("escenaGS");
+texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;
+if(hpSkybound<=0)return skyDerrotado();
+setTimeout(ataqueSky,500);return
+}
+
+if(tipoClash==="tres"){
+turnoOcupado=true;
+let v=[0,1,2].filter(i=>hpSkybounds[i]>0);
+if(!v.length)return;
+let o=v[turnoSky++%v.length];
+hpSkybounds[o]=Math.max(0,hpSkybounds[o]-30);
+actualizarTres();gif("escenaGS");
+texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA!</div>`;
+if(hpSkybounds.every(x=>x<=0))return tresDerrotados();
+setTimeout(ataqueTres,500);return
+}
+
 if(tipoClash==="fallen")return atacarFallen();
 if(tipoClash==="fallen78")return atacarFallen78()
 }
 
 function ataqueSky(){
 if(terminado||tipoClash!=="sky"){turnoOcupado=false;return}
-let d=Math.random()<.5?25:30;hpHilbert=Math.max(0,hpHilbert-d);gif("escenaNS");
+let d=Math.random()<.5?25:30;
+hpHilbert=Math.max(0,hpHilbert-d);
+gif("escenaNS");
 texto.innerHTML=`<div class="linea">El Skybound ataca y hace ${d} de daño!<br>HP de Hilbert: ${hpHilbert}/85</div>`;
-if(hpHilbert<=0)return derrota();turnoOcupado=false
+if(hpHilbert<=0)return derrota();
+turnoOcupado=false
 }
+
 function ataqueTres(){
 if(terminado||tipoClash!=="tres"){turnoOcupado=false;return}
-let v=[0,1,2].filter(i=>hpSkybounds[i]>0);if(!v.length)return;
+let v=[0,1,2].filter(i=>hpSkybounds[i]>0);
+if(!v.length)return;
 let a=v[Math.floor(Math.random()*v.length)],d=10+Math.floor(Math.random()*6);
-hpHilbert=Math.max(0,hpHilbert-d);gif("escenaNS");actualizarTres();
+hpHilbert=Math.max(0,hpHilbert-d);
+gif("escenaNS");actualizarTres();
 texto.innerHTML=`<div class="linea">Skybound ${a+1} ataca y hace ${d} de daño!<br>HP de Hilbert: ${hpHilbert}/110</div>`;
-if(hpHilbert<=0)return derrota();turnoOcupado=false
+if(hpHilbert<=0)return derrota();
+turnoOcupado=false
 }
+
 function atacarFallen(){
-if(terminado||turnoOcupado)return;turnoOcupado=true;
-let dH=hpHilbertFallen>0?(Math.random()<.15?45:30):0,dS=hpSamanthaFallen>0?[30,35,40][Math.floor(Math.random()*3)]:0;
-hpFallen=Math.max(0,hpFallen-dH-dS);actualizarFallen();gif("escenaGF");
+if(terminado||turnoOcupado)return;
+turnoOcupado=true;
+let dH=hpHilbertFallen>0?(Math.random()<.15?45:30):0;
+let dS=hpSamanthaFallen>0?[30,35,40][Math.floor(Math.random()*3)]:0;
+hpFallen=Math.max(0,hpFallen-dH-dS);
+actualizarFallen();gif("escenaGF");
 texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: TOMA! (${dH} daño)</div><div class="linea dialogoHS">Samantha: TOMA! (${dS} daño)</div>`;
-if(hpFallen<=0)return fallenDerrotado();setTimeout(ataqueFallen,500)
+if(hpFallen<=0)return fallenDerrotado();
+setTimeout(ataqueFallen,500)
 }
+
 function ataqueFallen(){
 if(terminado||tipoClash!=="fallen"){turnoOcupado=false;return}
-let v=[];if(hpHilbertFallen>0)v.push("Hilbert");if(hpSamanthaFallen>0)v.push("Samantha");if(!v.length)return derrotaFallen();
-if(Math.random()<.3){gif("escenaNF");texto.innerHTML="<div class='linea'>¡FALLEN FALLÓ SU ATAQUE!</div>";turnoOcupado=false;return}
-let o=v[Math.floor(Math.random()*v.length)];if(o==="Hilbert")hpHilbertFallen=Math.max(0,hpHilbertFallen-50);else hpSamanthaFallen=Math.max(0,hpSamanthaFallen-50);
-actualizarFallen();gif("escenaNF");texto.innerHTML=`<div class="linea">Fallen ataca a ${o} y hace 50 de daño!</div>`;
-if(hpHilbertFallen<=0&&hpSamanthaFallen<=0)return derrotaFallen();turnoOcupado=false
+let v=[];
+if(hpHilbertFallen>0)v.push("Hilbert");
+if(hpSamanthaFallen>0)v.push("Samantha");
+if(!v.length)return derrotaFallen();
+
+if(Math.random()<.3){
+gif("escenaNF");
+texto.innerHTML="<div class='linea'>¡FALLEN FALLÓ SU ATAQUE!</div>";
+turnoOcupado=false;return
 }
+
+let o=v[Math.floor(Math.random()*v.length)];
+if(o==="Hilbert")hpHilbertFallen=Math.max(0,hpHilbertFallen-50);
+else hpSamanthaFallen=Math.max(0,hpSamanthaFallen-50);
+
+actualizarFallen();gif("escenaNF");
+texto.innerHTML=`<div class="linea">Fallen ataca a ${o} y hace 50 de daño!</div>`;
+if(hpHilbertFallen<=0&&hpSamanthaFallen<=0)return derrotaFallen();
+turnoOcupado=false
+}
+
 function atacarFallen78(){
-if(terminado||turnoOcupado)return;turnoOcupado=true;
-let vivos=[];if(hpFallen1>0)vivos.push(1);if(hpFallen2>0)vivos.push(2);if(!vivos.length)return fallen78Derrotados();
-let o=vivos[Math.floor(Math.random()*vivos.length)],d=45;if(o===1)hpFallen1=Math.max(0,hpFallen1-d);else hpFallen2=Math.max(0,hpFallen2-d);
-actualizarFallen78();gif("a");texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ¡TOMA! (${d} daño)</div>`;
-if(hpFallen1<=0&&hpFallen2<=0)return setTimeout(fallen78Derrotados,400);setTimeout(parryFallen78,600)
+if(terminado||turnoOcupado)return;
+turnoOcupado=true;
+let vivos=[];
+if(hpFallen1>0)vivos.push(1);
+if(hpFallen2>0)vivos.push(2);
+if(!vivos.length)return fallen78Derrotados();
+
+let o=vivos[Math.floor(Math.random()*vivos.length)],d=45;
+if(o===1)hpFallen1=Math.max(0,hpFallen1-d);
+else hpFallen2=Math.max(0,hpFallen2-d);
+
+actualizarFallen78();gif("a");
+texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ¡TOMA! (${d} daño)</div>`;
+if(hpFallen1<=0&&hpFallen2<=0)return setTimeout(fallen78Derrotados,400);
+setTimeout(parryFallen78,600)
 }
+
 function parryFallen78(){
 if(terminado||tipoClash!=="fallen78"){turnoOcupado=false;return}
-gif("normal");texto.innerHTML="<div class='linea'>¡Fallen intentó atacar pero Samm hizo parry!</div>";actualizarFallen78();setTimeout(()=>turnoOcupado=false,500)
+gif("normal");
+texto.innerHTML="<div class='linea'>¡Fallen intentó atacar pero Samm hizo parry!</div>";
+actualizarFallen78();
+setTimeout(()=>turnoOcupado=false,500)
 }
 
 function hablar(){
 if(terminado||turnoOcupado)return;
-if(tipoClash==="papa"){gif("escenaH");if(Math.random()<.05)return papaSeVa();texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`}
-if(tipoClash==="fallen"){turnoOcupado=true;gif("escenaHF");if(Math.random()<.005)return fallenSeVa();texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`;setTimeout(ataqueFallen,500)}
+
+if(tipoClash==="papa"){
+gif("escenaH");
+if(Math.random()<.05)return papaSeVa();
+texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`
 }
+
+if(tipoClash==="fallen"){
+turnoOcupado=true;gif("escenaHF");
+if(Math.random()<.005)return fallenSeVa();
+texto.innerHTML=`<div class="linea dialogoIC">${esc(nombre())}: ...</div>`;
+setTimeout(ataqueFallen,500)
+}
+}
+
 function huir(){
 if(terminado||tipoClash==="tres"||tipoClash==="fallen"||tipoClash==="fallen78")return;
-gif(tipoClash==="papa"?"escenaHU":"escenaHUS");terminarClash()
+gif(tipoClash==="papa"?"escenaHU":"escenaHUS");
+terminarClash()
 }
+
 function finClash(g,t){
-if(terminado)return;terminado=true;turnoOcupado=false;gif(g);acciones.style.display="none";texto.innerHTML=`<div class='linea'>${t}</div>`;musicaOff();victoriaSonido();vida.style.display="none";tipoClash=null
+if(terminado)return;
+terminado=true;turnoOcupado=false;
+gif(g);acciones.style.display="none";
+texto.innerHTML=`<div class='linea'>${t}</div>`;
+musicaOff();victoriaSonido();vida.style.display="none";tipoClash=null
 }
+
 function papaSeVa(){finClash("escenaP","Papá se va.")}
 function skyDerrotado(){finClash("escenaS","¡El Skybound fue derrotado!")}
 function tresDerrotados(){finClash("escenaS","¡Los 3 Skybounds fueron derrotados!")}
@@ -395,25 +582,46 @@ function derrotaFallen(){finClash("escenaXD","¡Hilbert y Samantha perdieron!")}
 function derrota(){finClash("escenaSG","¡Hilbert fue derrotado!")}
 function fallen78Derrotados(){finClash("ye","¡Los 2 Fallen fueron derrotados!")}
 
-function terminarClash(){terminado=true;turnoOcupado=false;acciones.style.display="none";vida.style.display="none";musicaOff();tipoClash=null}
+function terminarClash(){
+terminado=true;turnoOcupado=false;
+acciones.style.display="none";vida.style.display="none";
+musicaOff();tipoClash=null
+}
 
 function preparar31(){
-startDisponible=false;botonAnterior.style.display="inline-block";botonSiguiente.style.display="none";startButton.style.display="none";
+startDisponible=false;
+botonAnterior.style.display="inline-block";
+botonSiguiente.style.display="none";
+startButton.style.display="none";
 if(timerStart)clearTimeout(timerStart);
-timerStart=setTimeout(()=>{if(pagina===31){startDisponible=true;startButton.style.display="inline-block"}},10000)
+timerStart=setTimeout(()=>{
+if(pagina===31){
+startDisponible=true;
+startButton.style.display="inline-block"
+}},10000)
 }
 
 function actualizar(){
 if(timerStart){clearTimeout(timerStart);timerStart=null}
 if(typeof samClose==="function"&&$("samBattle").style.display==="block")samClose();
-startDisponible=false;turnoOcupado=false;acciones.style.display="none";vida.style.display="none";
-botonHuir.disabled=botonHablar.disabled=botonAtacar.disabled=false;noMercy.style.display="none";musicaOff();tipoClash=null;terminado=true;
+
+startDisponible=false;turnoOcupado=false;
+acciones.style.display="none";vida.style.display="none";
+botonHuir.disabled=botonHablar.disabled=botonAtacar.disabled=false;
+noMercy.style.display="none";musicaOff();tipoClash=null;terminado=true;
+
 pag.textContent=nombres[pagina]||"Página "+pagina;
-document.body.style.background=pagina<=5?"#000":"#F4FBFF";document.body.style.color=pagina<=5?"#fff":"#152B3A";
+document.body.style.background=pagina<=5?"#000":"#F4FBFF";
+document.body.style.color=pagina<=5?"#fff":"#152B3A";
+
 let n=String(pagina).padStart(3,"0");
-if(videos[pagina])contenido.innerHTML=`<video controls autoplay playsinline><source src="${videos[pagina]}" type="video/mp4"></video>`;
-else if(pagina===78)contenido.innerHTML='<img src="normal.gif">';
-else contenido.innerHTML=`<img src="${n}.png" alt="Página ${pagina}">`;
+
+if(videos[pagina])
+contenido.innerHTML=`<video controls autoplay playsinline><source src="${videos[pagina]}" type="video/mp4"></video>`;
+else if(pagina===78)
+contenido.innerHTML='<img src="normal.gif">';
+else
+contenido.innerHTML=`<img src="${n}.png" alt="Página ${pagina}">`;
 
 if(pagina===28){texto.innerHTML="";iniciarPapa()}
 else if(pagina===37){texto.innerHTML="";iniciarSky()}
@@ -427,151 +635,483 @@ nombreBoton.style.display=pagina===6?"inline-block":"none";
 botonAnterior.style.display=pagina>1?"inline-block":"none";
 botonSiguiente.style.display=pagina<TOTAL&&pagina!==31&&pagina!==94?"inline-block":"none";
 startButton.style.display="none";
+
 if(pagina===31)preparar31();
 guardar()
 }
+
 function irAnterior(){if(pagina>1){pagina--;actualizar()}}
 function irSiguiente(){if(pagina<TOTAL&&pagina!==31&&pagina!==94){pagina++;actualizar()}}
 function iniciarTBS(){if(pagina===31&&startDisponible){pagina++;actualizar()}}
-   let s1=75,s2=75,shp=100,sbusy=false,sinv=false,sx=50,sy=78,stimer=null,sctimer=null,scount=0,starget=0,sfinal=false,sdrag=false;
-const sarena=$("samArena"),ssoul=$("samSoul"),stext=$("samText"),sclick=$("samClick"),scfill=$("samClickFill"),smusic=$("samMusic"),sover=$("samOver"),sres=$("samResult");
+   let s1=75,s2=75,shp=100,sbusy=false,sinv=false,sx=50,sy=78;
+let stimer=null,sctimer=null,scount=0,starget=0,sfinal=false,sdrag=false;
+
+const sarena=$("samArena"),ssoul=$("samSoul"),stext=$("samText");
+const sclick=$("samClick"),scfill=$("samClickFill"),smusic=$("samMusic");
+const sover=$("samOver"),sres=$("samResult");
 
 function samStart(){
-samClear();$("samBattle").style.display="block";document.body.style.overflow="hidden";
-s1=75;s2=75;shp=100;sbusy=false;sinv=false;sx=50;sy=78;sfinal=false;
-ssoul.style.left="50%";ssoul.style.top="78%";$("samAttackMenu").style.display="none";sover.style.display="none";sclick.style.display="none";
-samUpdate();smusic.currentTime=0;smusic.play().catch(()=>{})
+samClear();
+$("samBattle").style.display="block";
+document.body.style.overflow="hidden";
+
+s1=75;s2=75;shp=100;sbusy=false;sinv=false;
+sx=50;sy=78;sfinal=false;
+
+ssoul.style.left="50%";
+ssoul.style.top="78%";
+$("samAttackMenu").style.display="none";
+sover.style.display="none";
+sclick.style.display="none";
+
+samUpdate();
+smusic.currentTime=0;
+smusic.play().catch(()=>{})
 }
+
 function samClose(){
-samClear();$("samBattle").style.display="none";smusic.pause();smusic.currentTime=0;document.body.style.overflow="";sbusy=false;
-document.removeEventListener("pointerdown",samClick);document.removeEventListener("keydown",samKey)
+samClear();
+$("samBattle").style.display="none";
+smusic.pause();
+smusic.currentTime=0;
+document.body.style.overflow="";
+sbusy=false;
+
+document.removeEventListener("pointerdown",samClick);
+document.removeEventListener("keydown",samKey)
 }
-function samReset(){samClose();samStart()}
+
+function samReset(){
+samClose();
+samStart()
+}
+
 function samUpdate(){
-$("samH1").textContent=s1;$("samH2").textContent=s2;$("samHP").textContent=shp;
-$("samB1").style.width=s1/75*100+"%";$("samB2").style.width=s2/75*100+"%"
+$("samH1").textContent=s1;
+$("samH2").textContent=s2;
+$("samHP").textContent=shp;
+$("samB1").style.width=s1/75*100+"%";
+$("samB2").style.width=s2/75*100+"%"
 }
-function samPos(a,b){sx=Math.max(4,Math.min(96,a));sy=Math.max(5,Math.min(95,b));ssoul.style.left=sx+"%";ssoul.style.top=sy+"%"}
-function samClear(){
-if(stimer)clearInterval(stimer);stimer=null;
-if(sctimer)clearInterval(sctimer);sctimer=null;
-sarena.querySelectorAll(".samAtk,.samWarn").forEach(e=>e.remove());
-sarena.classList.remove("samRot");
-document.removeEventListener("pointerdown",samClick);document.removeEventListener("keydown",samKey);
+
+/* MOVIMIENTO DEL ALMA */
+function samPos(a,b){
+sx=Math.max(4,Math.min(96,a));
+sy=Math.max(5,Math.min(95,b));
+ssoul.style.left=sx+"%";
+ssoul.style.top=sy+"%"
 }
+
+/* FLECHAS DEL TECLADO */
 document.addEventListener("keydown",e=>{
 if($("samBattle").style.display!=="block"||shp<=0)return;
-if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key))e.preventDefault();
-if(e.key==="ArrowLeft")samPos(sx-4,sy);if(e.key==="ArrowRight")samPos(sx+4,sy);if(e.key==="ArrowUp")samPos(sx,sy-4);if(e.key==="ArrowDown")samPos(sx,sy+4)
+
+if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key))
+e.preventDefault();
+
+if(e.key==="ArrowLeft")samPos(sx-4,sy);
+if(e.key==="ArrowRight")samPos(sx+4,sy);
+if(e.key==="ArrowUp")samPos(sx,sy-4);
+if(e.key==="ArrowDown")samPos(sx,sy+4)
 });
-sarena.addEventListener("pointerdown",e=>{if(sbusy)return;sdrag=true;samMove(e)});
-sarena.addEventListener("pointermove",e=>{if(sdrag&&!sbusy)samMove(e)});
+
+/* MOVIMIENTO POR ARRASTRE/TOQUE */
+sarena.addEventListener("pointerdown",e=>{
+if(sbusy)return;
+sdrag=true;
+samMove(e)
+});
+
+sarena.addEventListener("pointermove",e=>{
+if(sdrag&&!sbusy)samMove(e)
+});
+
 window.addEventListener("pointerup",()=>sdrag=false);
-function samMove(e){let r=sarena.getBoundingClientRect();samPos((e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100)}
-function samBtns(v){document.querySelectorAll(".samBtns button").forEach(b=>b.disabled=!v)}
+
+function samMove(e){
+let r=sarena.getBoundingClientRect();
+samPos(
+(e.clientX-r.left)/r.width*100,
+(e.clientY-r.top)/r.height*100
+)
+}
+
+function samBtns(v){
+document.querySelectorAll(".samBtns button")
+.forEach(b=>b.disabled=!v)
+}
 
 function samAttackMenu(){
-if(sbusy)return;sbusy=true;samBtns(false);$("samAttackMenu").style.display="block";stext.textContent="¿A cuál Skybound atacarás?"
+if(sbusy)return;
+sbusy=true;
+samBtns(false);
+$("samAttackMenu").style.display="block";
+stext.textContent="¿A cuál Skybound atacarás?"
 }
+
 function samCloseAttack(){
-$("samAttackMenu").style.display="none";sbusy=false;samBtns(true);stext.textContent="¿Qué hará Samantha?"
+$("samAttackMenu").style.display="none";
+sbusy=false;
+samBtns(true);
+stext.textContent="¿Qué hará Samantha?"
 }
+
 function samTarget(n){
 if((n===1&&s1<=0)||(n===2&&s2<=0))return;
-starget=n;$("samAttackMenu").style.display="none";scount=0;sclick.style.display="block";$("samClicks").textContent="0";$("samSecs").textContent="7.0";scfill.style.width="0";stext.textContent="¡DISPARA! ¡LLENA LA BARRA!";
+
+starget=n;
+$("samAttackMenu").style.display="none";
+
+scount=0;
+sclick.style.display="block";
+$("samClicks").textContent="0";
+$("samSecs").textContent="7.0";
+scfill.style.width="0";
+stext.textContent="¡DISPARA! ¡LLENA LA BARRA!";
+
 let z=performance.now();
+
 if(sctimer)clearInterval(sctimer);
-sctimer=setInterval(()=>{let q=performance.now()-z;$("samSecs").textContent=Math.max(0,7-q/1000).toFixed(1);if(q>=7000)samFinishClick()},50);
-document.addEventListener("pointerdown",samClick);document.addEventListener("keydown",samKey)
+
+sctimer=setInterval(()=>{
+let q=performance.now()-z;
+$("samSecs").textContent=Math.max(0,7-q/1000).toFixed(1);
+
+if(q>=7000)samFinishClick()
+},50);
+
+document.addEventListener("pointerdown",samClick);
+document.addEventListener("keydown",samKey)
 }
-function samClick(e){if(scount>=25||e.target.closest(".samBtns")||e.target.closest("#samAttackMenu"))return;samDoClick()}
-function samKey(e){if(e.code==="Space"&&scount<25){e.preventDefault();samDoClick()}}
-function samDoClick(){if(scount>=25)return;scount++;$("samClicks").textContent=scount;scfill.style.width=scount/25*100+"%";if(scount>=25)samFinishClick()}
+
+function samClick(e){
+if(scount>=25||e.target.closest(".samBtns")||e.target.closest("#samAttackMenu"))return;
+samDoClick()
+}
+
+function samKey(e){
+if(e.code==="Space"&&scount<25){
+e.preventDefault();
+samDoClick()
+}
+}
+
+function samDoClick(){
+if(scount>=25)return;
+scount++;
+$("samClicks").textContent=scount;
+scfill.style.width=scount/25*100+"%";
+if(scount>=25)samFinishClick()
+}
+
 function samFinishClick(){
 if(!sctimer)return;
-clearInterval(sctimer);sctimer=null;document.removeEventListener("pointerdown",samClick);document.removeEventListener("keydown",samKey);sclick.style.display="none";
-let d=Math.round(scount/25*65);if(starget===1)s1=Math.max(0,s1-d);else s2=Math.max(0,s2-d);samUpdate();
+
+clearInterval(sctimer);
+sctimer=null;
+
+document.removeEventListener("pointerdown",samClick);
+document.removeEventListener("keydown",samKey);
+
+sclick.style.display="none";
+
+let d=Math.round(scount/25*65);
+
+if(starget===1)s1=Math.max(0,s1-d);
+else s2=Math.max(0,s2-d);
+
+samUpdate();
+
 stext.textContent="¡SAMANTHA DISPARA! — "+d+" DE DAÑO";
+
 if(s1<=0&&s2<=0)return setTimeout(samWin,700);
-if((s1<=0||s2<=0)&&!sfinal)return setTimeout(samFinal,850);
+
+if((s1<=0||s2<=0)&&!sfinal)
+return setTimeout(samFinal,850);
+
 setTimeout(samEnemy,850)
 }
+
 function samTalk(){
-if(sbusy)return;sbusy=true;samBtns(false);
-stext.textContent=["Samantha intenta razonar con los Skybounds.","Los Skybounds se miran entre ellos.","Samantha baja sus revólveres por un instante.","El cielo parece responder a Samantha."][Math.floor(Math.random()*4)];
+if(sbusy)return;
+sbusy=true;
+samBtns(false);
+
+stext.textContent=[
+"Samantha intenta razonar con los Skybounds.",
+"Los Skybounds se miran entre ellos.",
+"Samantha baja sus revólveres por un instante.",
+"El cielo parece responder a Samantha."
+][Math.floor(Math.random()*4)];
+
 setTimeout(samEnemy,800)
 }
+
 function samRun(){
-if(sbusy)return;sbusy=true;samBtns(false);stext.textContent="¡Samantha intenta escapar!";
-setTimeout(()=>{if(Math.random()<.5){stext.textContent="¡SAMANTHA ESCAPÓ!";setTimeout(samWin,700)}else{stext.textContent="¡Los Skybounds bloquean el camino!";setTimeout(samEnemy,650)}},500)
+if(sbusy)return;
+
+sbusy=true;
+samBtns(false);
+stext.textContent="¡Samantha intenta escapar!";
+
+setTimeout(()=>{
+if(Math.random()<.5){
+stext.textContent="¡SAMANTHA ESCAPÓ!";
+setTimeout(samWin,700)
+}else{
+stext.textContent="¡Los Skybounds bloquean el camino!";
+setTimeout(samEnemy,650)
 }
+},500)
+}
+
 function samEnemy(){
-if(shp<=0)return;if(s1<=0&&s2<=0)return samWin();if((s1<=0||s2<=0)&&!sfinal)return samFinal();
-sbusy=true;samBtns(false);stext.textContent="¡LOS SKYBOUNDS ATACAN!";setTimeout(()=>Math.random()<.5?samShards():samScratch(),500)
+if(shp<=0)return samLose();
+if(s1<=0&&s2<=0)return samWin();
+if((s1<=0||s2<=0)&&!sfinal)return samFinal();
+
+sbusy=true;
+samBtns(false);
+stext.textContent="¡LOS SKYBOUNDS ATACAN!";
+
+setTimeout(()=>{
+Math.random()<.5?samShards():samScratch()
+},500)
 }
+
 function samHit(o,d){
 if(sinv||shp<=0||!o.parentNode)return;
-let a=o.getBoundingClientRect(),b=ssoul.getBoundingClientRect();
-if(a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top){
-sinv=true;shp=Math.max(0,shp-d);samUpdate();o.remove();ssoul.style.opacity=".3";
-setTimeout(()=>{sinv=false;ssoul.style.opacity="1"},450);if(shp<=0)samLose()
+
+let a=o.getBoundingClientRect();
+let b=ssoul.getBoundingClientRect();
+
+if(
+a.left<b.right&&
+a.right>b.left&&
+a.top<b.bottom&&
+a.bottom>b.top
+){
+sinv=true;
+shp=Math.max(0,shp-d);
+samUpdate();
+o.remove();
+ssoul.style.opacity=".3";
+
+setTimeout(()=>{
+sinv=false;
+ssoul.style.opacity="1"
+},450);
+
+if(shp<=0)samLose()
 }
 }
+
 function samFinish(){
-if(stimer)clearInterval(stimer);stimer=null;sarena.querySelectorAll(".samAtk,.samWarn").forEach(e=>e.remove());sarena.classList.remove("samRot");
-if(shp<=0)return;sbusy=false;samBtns(true);stext.textContent="¿Qué hará Samantha?"
+if(stimer)clearInterval(stimer);
+stimer=null;
+
+sarena.querySelectorAll(".samAtk,.samWarn").forEach(e=>e.remove());
+sarena.classList.remove("samRot");
+
+if(shp<=0)return;
+
+sbusy=false;
+samBtns(true);
+stext.textContent="¿Qué hará Samantha?"
 }
+
 function samShards(){
-stext.textContent="SHARDS EVERYWHERE!";let z=performance.now();
+stext.textContent="SHARDS EVERYWHERE!";
+
+let z=performance.now();
+
 stimer=setInterval(()=>{
-if(performance.now()-z>=4300){samFinish();return}
+if(performance.now()-z>=4300){
+samFinish();
+return
+}
+
 let side=Math.floor(Math.random()*4),l,t,dx,dy;
+
 if(side===0){l=Math.random()*100;t=-8;dx=(Math.random()-.5)*.8;dy=1}
 if(side===1){l=108;t=Math.random()*100;dx=-1;dy=(Math.random()-.5)*.8}
 if(side===2){l=Math.random()*100;t=108;dx=(Math.random()-.5)*.8;dy=-1}
 if(side===3){l=-8;t=Math.random()*100;dx=1;dy=(Math.random()-.5)*.8}
-let o=document.createElement("div");o.className="samAtk samShard";o.style.cssText=`width:9px;height:9px;left:${l}%;top:${t}%`;sarena.appendChild(o);let a=l,b=t;
-let m=setInterval(()=>{a+=dx*1.45;b+=dy*1.45;o.style.left=a+"%";o.style.top=b+"%";samHit(o,15);if(!o.parentNode||a<-20||a>120||b<-20||b>120)clearInterval(m)},16)
+
+let o=document.createElement("div");
+o.className="samAtk samShard";
+o.style.cssText=`width:9px;height:9px;left:${l}%;top:${t}%`;
+sarena.appendChild(o);
+
+let a=l,b=t;
+
+let m=setInterval(()=>{
+a+=dx*1.45;
+b+=dy*1.45;
+
+o.style.left=a+"%";
+o.style.top=b+"%";
+
+samHit(o,15);
+
+if(!o.parentNode||a<-20||a>120||b<-20||b>120)
+clearInterval(m)
+},16)
 },170)
 }
+
 function samScratch(){
-stext.textContent="SCRATCH!";let z=performance.now();
+stext.textContent="SCRATCH!";
+
+let z=performance.now();
+
 stimer=setInterval(()=>{
-if(performance.now()-z>=4300){samFinish();return}
-let l=8+Math.random()*82,t=8+Math.random()*78,w=document.createElement("div");
-w.className="samWarn";w.style.cssText=`width:54px;height:54px;left:${l}%;top:${t}%`;sarena.appendChild(w);
-setTimeout(()=>{if(!w.parentNode)return;w.remove();let o=document.createElement("div");o.className="samAtk samClaw";o.style.cssText=`width:54px;height:54px;left:${l}%;top:${t}%`;sarena.appendChild(o);setTimeout(()=>{if(o.parentNode)samHit(o,30);if(o.parentNode)o.remove()},180)},600)
+if(performance.now()-z>=4300){
+samFinish();
+return
+}
+
+let l=8+Math.random()*82;
+let t=8+Math.random()*78;
+
+let w=document.createElement("div");
+w.className="samWarn";
+w.style.cssText=`width:54px;height:54px;left:${l}%;top:${t}%`;
+sarena.appendChild(w);
+
+setTimeout(()=>{
+if(!w.parentNode)return;
+
+w.remove();
+
+let o=document.createElement("div");
+o.className="samAtk samClaw";
+o.style.cssText=`width:54px;height:54px;left:${l}%;top:${t}%`;
+sarena.appendChild(o);
+
+setTimeout(()=>{
+if(o.parentNode)samHit(o,30);
+if(o.parentNode)o.remove()
+},180)
+},600)
 },850)
 }
+
 function samFinal(){
-if(sfinal)return;sfinal=true;sbusy=true;samBtns(false);samClear();stext.textContent="¡THE WORLD REVOLVING!";sarena.classList.add("samRot");
-setTimeout(()=>{stext.textContent="¡¡¡THE WORLD REVOLVING!!!";samRunFinal()},1000)
+if(sfinal)return;
+
+sfinal=true;
+sbusy=true;
+samBtns(false);
+samClear();
+
+stext.textContent="¡THE WORLD REVOLVING!";
+sarena.classList.add("samRot");
+
+setTimeout(()=>{
+stext.textContent="¡¡¡THE WORLD REVOLVING!!!";
+samRunFinal()
+},1000)
 }
+
 function samRunFinal(){
 let z=performance.now();
+
 stimer=setInterval(()=>{
 if(performance.now()-z>=6500){
-samClear();stext.textContent="¡EL SKYBOUND ESTÁ AGOTADO!";
-setTimeout(()=>{sbusy=false;samBtns(true);stext.textContent="¡ES TU OPORTUNIDAD!"},700);return
+samClear();
+stext.textContent="¡EL SKYBOUND ESTÁ AGOTADO!";
+
+setTimeout(()=>{
+sbusy=false;
+samBtns(true);
+stext.textContent="¡ES TU OPORTUNIDAD!"
+},700);
+
+return
 }
+
 if(Math.random()<.42){
-let l=Math.random()*94,o=document.createElement("div");o.className="samAtk samShard";o.style.cssText=`width:13px;height:13px;left:${l}%;top:-10%`;sarena.appendChild(o);let a=l,b=-10;
-let m=setInterval(()=>{a+=(Math.random()-.5)*.12;b+=1.05;o.style.left=a+"%";o.style.top=b+"%";samHit(o,15);if(!o.parentNode||b>120)clearInterval(m)},16)
+let l=Math.random()*94;
+let o=document.createElement("div");
+
+o.className="samAtk";
+o.style.cssText=`width:13px;height:13px;left:${l}%;top:-10%`;
+sarena.appendChild(o);
+
+let a=l,b=-10;
+
+let m=setInterval(()=>{
+a+=(Math.random()-.5)*.12;
+b+=1.05;
+
+o.style.left=a+"%";
+o.style.top=b+"%";
+
+samHit(o,15);
+
+if(!o.parentNode||b>120)
+clearInterval(m)
+},16)
 }
+
 if(Math.random()<.32){
-let left=Math.random()<.5,sx0=left?-8:108,sy0=10+Math.random()*80,ang=Math.atan2(sy-sy0,sx-sx0),o=document.createElement("div");
-o.className="samAtk";o.style.cssText=`width:16px;height:16px;left:${sx0}%;top:${sy0}%;background:#fff;box-shadow:0 0 10px white`;sarena.appendChild(o);let a=sx0,b=sy0;
-let m=setInterval(()=>{a+=Math.cos(ang)*1.05;b+=Math.sin(ang)*1.05;o.style.left=a+"%";o.style.top=b+"%";samHit(o,30);if(!o.parentNode||a<-20||a>120||b<-20||b>120)clearInterval(m)},16)
+let left=Math.random()<.5;
+let sx0=left?-8:108;
+let sy0=10+Math.random()*80;
+
+let ang=Math.atan2(
+sy-sy0,
+sx-sx0
+);
+
+let o=document.createElement("div");
+
+o.className="samAtk";
+o.style.cssText=`width:16px;height:16px;left:${sx0}%;top:${sy0}%;background:#fff;box-shadow:0 0 10px white`;
+
+sarena.appendChild(o);
+
+let a=sx0,b=sy0;
+
+let m=setInterval(()=>{
+a+=Math.cos(ang)*1.05;
+b+=Math.sin(ang)*1.05;
+
+o.style.left=a+"%";
+o.style.top=b+"%";
+
+samHit(o,30);
+
+if(!o.parentNode||a<-20||a>120||b<-20||b>120)
+clearInterval(m)
+},16)
 }
 },250)
 }
+
 function samWin(){
-samClear();sbusy=true;samBtns(false);stext.textContent="¡SAMANTHA DERROTÓ A LOS SKYBOUNDS!";
-setTimeout(()=>{sover.style.display="flex";sres.textContent="¡VICTORIA!"},800)
+samClear();
+sbusy=true;
+samBtns(false);
+stext.textContent="¡SAMANTHA DERROTÓ A LOS SKYBOUNDS!";
+
+setTimeout(()=>{
+sover.style.display="flex";
+sres.textContent="¡VICTORIA!"
+},800)
 }
+
 function samLose(){
-samClear();sbusy=true;samBtns(false);stext.textContent="¡SAMANTHA FUE DERROTADA!";
-setTimeout(()=>{sover.style.display="flex";sres.textContent="GAME OVER"},600)
+samClear();
+sbusy=true;
+samBtns(false);
+stext.textContent="¡SAMANTHA FUE DERROTADA!";
+
+setTimeout(()=>{
+sover.style.display="flex";
+sres.textContent="GAME OVER"
+},600)
 }
 
 actualizar();
