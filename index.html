@@ -2,425 +2,84 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{background:#000;color:#fff;text-align:center;margin:0;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}button{font-size:20px;padding:10px 18px;margin:6px 4px;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none}button:disabled{opacity:.4;cursor:not-allowed}h1{margin:12px 0 4px}#pag{font-size:13px;font-weight:bold;opacity:.7;margin:5px}#top{display:flex;justify-content:center;align-items:center;gap:8px;margin:3px;flex-wrap:wrap}#mapaBtn{font-size:14px;padding:5px 10px;position:fixed;top:8px;right:8px;z-index:6000}#contenido{width:100%;max-width:1000px;margin:auto}#contenido img,#contenido video{max-width:100%;height:auto;display:block;margin:auto}#contenido video{width:100%}#texto{font-size:22px;margin:15px auto;padding:0 15px;max-width:800px;min-height:25px}.linea{margin:8px 0}.dialogoIC{color:#FF8C00}.dialogoHS{color:#FFD700}.dialogoWP{color:#3498DB}.dialogoFV{color:#FF69B4}
 #vida{display:none;width:90%;max-width:600px;margin:10px auto 20px}.fondo{width:100%;height:25px;background:#555;border:2px solid #222;margin-top:6px}.barra{width:100%;height:100%;background:#d62828;transition:width .3s}#hp{font-size:20px;margin-top:5px}#barrasTres,#barrasFallen,#barrasFallen2{display:none}.nombreSky,.nombreFallen,.nombreJugador{font-weight:bold;margin-top:8px}#acciones{display:none;margin:15px auto}.pelea{font-size:19px;padding:12px 20px;margin:5px}#nombreBoton,#nombreBox,#startButton{display:none}#nombreBox{margin:15px}#nombreInput{font-size:20px;padding:8px;max-width:250px}#guardado{font-size:16px;margin:20px auto;padding:10px;opacity:.75;max-width:700px}#noMercy{display:none;font-size:20px;font-weight:bold;margin-top:8px}
 #mapa{display:none;position:fixed;z-index:7000;inset:0;background:#050505;color:#fff;overflow:auto;padding:15px}.acto{margin:20px auto;max-width:800px}.paginas{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.mini{width:70px;height:70px;object-fit:cover;border:2px solid #777;border-radius:4px;cursor:pointer}.cerrarMapa{font-size:16px;padding:7px 14px}.proximo{opacity:.55;font-size:18px;font-weight:bold}
-#botonAnterior,#botonSiguiente{position:fixed;bottom:10px;z-index:6000;margin:0;background:#000;color:#fff;border:2px solid #fff}#botonAnterior{left:8px}#botonSiguiente{right:8px}
-.clashVidaJugador{margin-top:15px}.mensajeEliminado{font-size:22px;font-weight:bold;margin:40px auto;max-width:700px}
-@media(max-width:600px){h1{font-size:28px}#texto{font-size:18px}}
+#botonAnterior,#botonSiguiente{position:fixed;bottom:10px;z-index:6000;margin:0;background:#000;color:#fff;border:2px solid #fff}#botonAnterior{left:8px}#botonSiguiente{right:8px}.clashVidaJugador{margin-top:15px}.mensajeEliminado{font-size:22px;font-weight:bold;margin:40px auto;max-width:700px}@media(max-width:600px){h1{font-size:28px}#texto{font-size:18px}}
 </style></head><body>
-
-<h1>The Big SKY</h1>
-<div id="top"><div id="pag" aria-live="polite"></div><button id="mapaBtn" type="button" onclick="abrirMapa()">MAPA</button></div>
-
-<div id="mapa" aria-hidden="true">
-<button class="cerrarMapa" type="button" onclick="cerrarMapa()">← VOLVER</button>
-<h2>MAPA</h2>
-<div class="acto"><h2>ACTO 1</h2><div class="paginas">
-<img class="mini" src="001.png" alt="Página 1" onclick="irMapa(1)">
-<img class="mini" src="028.png" alt="Página 28" onclick="irMapa(28)">
-<img class="mini" src="035.png" alt="Página 35" onclick="irMapa(35)">
-<img class="mini" src="050.png" alt="Página 50" onclick="irMapa(50)">
-<img class="mini" src="059.png" alt="Página 59" onclick="irMapa(59)">
-</div></div>
-<div class="acto"><h2>ACTO 2</h2><div class="paginas">
-<img class="mini" src="064.png" alt="Página 64" onclick="irMapa(64)">
-<img class="mini" src="074.png" alt="Página 74" onclick="irMapa(74)">
-<img class="mini" src="091.png" alt="Página 91" onclick="irMapa(91)">
-<img class="mini" src="094.png" alt="Página 94" onclick="irMapa(94)">
-</div></div>
-<div class="acto"><h2>ACTO 3</h2><div class="paginas"><div class="proximo">PRÓXIMAMENTE...</div></div></div>
-</div>
-
-<div id="vida">
-<div id="nombreE">ENEMIGO</div>
-<div id="barraNormal"><div class="fondo"><div id="barraUnica" class="barra"></div></div><div id="hp">100%</div></div>
-
-<div id="barrasTres">
-<div class="nombreSky">SKYBOUND 1</div><div class="fondo"><div id="barraSky1" class="barra"></div></div>
-<div class="nombreSky">SKYBOUND 2</div><div class="fondo"><div id="barraSky2" class="barra"></div></div>
-<div class="nombreSky">SKYBOUND 3</div><div class="fondo"><div id="barraSky3" class="barra"></div></div>
-<div id="hpTres"></div>
-</div>
-
-<div id="barrasFallen">
-<div class="nombreFallen">FALLEN</div><div class="fondo"><div id="barraFallen" class="barra"></div></div><div id="hpFallen">850/850</div>
-<div class="nombreJugador">HILBERT</div><div class="fondo"><div id="barraHilbertFallen" class="barra"></div></div><div id="hpHilbertFallen">110/110</div>
-<div class="nombreJugador">SAMANTHA</div><div class="fondo"><div id="barraSamanthaFallen" class="barra"></div></div><div id="hpSamanthaFallen">100/100</div>
-</div>
-
-<div id="barrasFallen2">
-<div class="nombreFallen">FALLEN 1</div><div class="fondo"><div id="barraFallen1" class="barra"></div></div><div id="hpFallen1">850/850</div>
-<div class="nombreFallen">FALLEN 2</div><div class="fondo"><div id="barraFallen2" class="barra"></div></div><div id="hpFallen2">850/850</div>
-<div class="nombreJugador">HILBERT</div><div class="fondo"><div id="barraHilbert78" class="barra"></div></div><div id="hpHilbert78">110/110</div>
-</div>
-
-<div id="jugadorHP" style="display:none" class="clashVidaJugador">
-<div id="nombreJugadorClash" class="nombreJugador">JUGADOR</div>
-<div class="fondo"><div id="barraJugadorClash" class="barra"></div></div>
-<div id="hpJugadorClash"></div>
-</div>
-</div>
-
-<div id="contenido"><img src="001.png" alt="Página 1 de The Big SKY"></div>
-<div id="texto"></div>
-
-<div id="acciones">
-<button id="botonHablar" class="pelea" type="button" onclick="hablar()">HABLAR</button>
-<button id="botonAtacar" class="pelea" type="button" onclick="atacar()">ATACAR</button>
-<button id="botonHuir" class="pelea" type="button" onclick="huir()">HUIR</button>
-<div id="noMercy">No mercy!</div>
-</div>
-
-<button id="startButton" type="button" onclick="iniciarTBS()">Start!</button>
-<button id="nombreBoton" type="button" onclick="mostrarNombre()">Ponerle nombre</button>
-<div id="nombreBox"><p>¿Cómo debería llamarse este chico?</p><input id="nombreInput" maxlength="20" autocomplete="off"><br><button type="button" onclick="confirmarNombre()">CONFIRMAR</button></div>
-
-<button id="botonAnterior" type="button" onclick="irAnterior()">&lt;==</button>
-<button id="botonSiguiente" type="button" onclick="irSiguiente()">==&gt;</button>
-
-<div id="guardado">Esto tiene guardado automático, gracias por leer &lt;3</div>
-
-<audio id="audioClash" loop preload="auto"><source src="clash.mp3" type="audio/mpeg"></audio>
-<audio id="audioFallen" loop preload="auto"><source src="Vsfallen.mp3" type="audio/mpeg"></audio>
-<audio id="audioVictoria" preload="auto"><source src="yeah.mp3" type="audio/mpeg"></audio>
-
+<h1>The Big SKY</h1><div id="top"><div id="pag" aria-live="polite"></div><button id="mapaBtn" type="button" onclick="abrirMapa()">MAPA</button></div>
+<div id="mapa" aria-hidden="true"><button class="cerrarMapa" type="button" onclick="cerrarMapa()">← VOLVER</button><h2>MAPA</h2><div class="acto"><h2>ACTO 1</h2><div class="paginas"><img class="mini" src="001.png" alt="Página 1" onclick="irMapa(1)"><img class="mini" src="028.png" alt="Página 28" onclick="irMapa(28)"><img class="mini" src="035.png" alt="Página 35" onclick="irMapa(35)"><img class="mini" src="050.png" alt="Página 50" onclick="irMapa(50)"><img class="mini" src="059.png" alt="Página 59" onclick="irMapa(59)"></div></div><div class="acto"><h2>ACTO 2</h2><div class="paginas"><img class="mini" src="064.png" alt="Página 64" onclick="irMapa(64)"><img class="mini" src="074.png" alt="Página 74" onclick="irMapa(74)"><img class="mini" src="091.png" alt="Página 91" onclick="irMapa(91)"><img class="mini" src="094.png" alt="Página 94" onclick="irMapa(94)"></div></div><div class="acto"><h2>ACTO 3</h2><div class="paginas"><div class="proximo">PRÓXIMAMENTE...</div></div></div></div>
+<div id="vida"><div id="nombreE">ENEMIGO</div><div id="barraNormal"><div class="fondo"><div id="barraUnica" class="barra"></div></div><div id="hp">100%</div></div><div id="barrasTres"><div class="nombreSky">SKYBOUND 1</div><div class="fondo"><div id="barraSky1" class="barra"></div></div><div class="nombreSky">SKYBOUND 2</div><div class="fondo"><div id="barraSky2" class="barra"></div></div><div class="nombreSky">SKYBOUND 3</div><div class="fondo"><div id="barraSky3" class="barra"></div></div><div id="hpTres"></div></div>
+<div id="barrasFallen"><div class="nombreFallen">FALLEN</div><div class="fondo"><div id="barraFallen" class="barra"></div></div><div id="hpFallen">850/850</div><div class="nombreJugador">HILBERT</div><div class="fondo"><div id="barraHilbertFallen" class="barra"></div></div><div id="hpHilbertFallen">110/110</div><div class="nombreJugador">SAMANTHA</div><div class="fondo"><div id="barraSamanthaFallen" class="barra"></div></div><div id="hpSamanthaFallen">100/100</div></div>
+<div id="barrasFallen2"><div class="nombreFallen">FALLEN 1</div><div class="fondo"><div id="barraFallen1" class="barra"></div></div><div id="hpFallen1">850/850</div><div class="nombreFallen">FALLEN 2</div><div class="fondo"><div id="barraFallen2" class="barra"></div></div><div id="hpFallen2">850/850</div><div class="nombreJugador">HILBERT</div><div class="fondo"><div id="barraHilbert78" class="barra"></div></div><div id="hpHilbert78">110/110</div></div>
+<div id="jugadorHP" style="display:none" class="clashVidaJugador"><div id="nombreJugadorClash" class="nombreJugador">JUGADOR</div><div class="fondo"><div id="barraJugadorClash" class="barra"></div></div><div id="hpJugadorClash"></div></div></div>
+<div id="contenido"><img src="001.png" alt="Página 1 de The Big SKY"></div><div id="texto"></div>
+<div id="acciones"><button id="botonHablar" class="pelea" type="button" onclick="hablar()">HABLAR</button><button id="botonAtacar" class="pelea" type="button" onclick="atacar()">ATACAR</button><button id="botonHuir" class="pelea" type="button" onclick="huir()">HUIR</button><div id="noMercy">No mercy!</div></div>
+<button id="startButton" type="button" onclick="iniciarTBS()">Start!</button><button id="nombreBoton" type="button" onclick="mostrarNombre()">Ponerle nombre</button><div id="nombreBox"><p>¿Cómo debería llamarse este chico?</p><input id="nombreInput" maxlength="20" autocomplete="off"><br><button type="button" onclick="confirmarNombre()">CONFIRMAR</button></div>
+<button id="botonAnterior" type="button" onclick="irAnterior()">&lt;==</button><button id="botonSiguiente" type="button" onclick="irSiguiente()">==&gt;</button><div id="guardado">Esto tiene guardado automático, gracias por leer &lt;3</div>
+<audio id="audioClash" loop preload="auto"><source src="clash.mp3" type="audio/mpeg"></audio><audio id="audioFallen" loop preload="auto"><source src="Vsfallen.mp3" type="audio/mpeg"></audio><audio id="audioVictoria" preload="auto"><source src="yeah.mp3" type="audio/mpeg"></audio>
 <script>"use strict";
 const $=id=>document.getElementById(id);
-let pagina=1,nombreHilbert="",tipoClash=null,terminado=true;
-let hpJugador=85,objetivos=[],objetivoActual=0,pacienciaPapa=100;
+let pagina=1,nombreHilbert="",tipoClash=null,terminado=true,hpJugador=85,objetivos=[],objetivoActual=0,pacienciaPapa=100;
 let hpFallen=850,hpHilbertFallen=110,hpSamanthaFallen=100,hpFallen1=850,hpFallen2=850,hpHilbert78=110;
-
-const TOTAL=105;
-const contenido=$("contenido"),texto=$("texto"),vida=$("vida"),pag=$("pag"),acciones=$("acciones");
-const ba=$("botonAnterior"),bs=$("botonSiguiente"),audioClash=$("audioClash"),audioFallen=$("audioFallen"),audioVictoria=$("audioVictoria"),nombreBox=$("nombreBox"),nombreInput=$("nombreInput");
-
+const TOTAL=105,contenido=$("contenido"),texto=$("texto"),vida=$("vida"),pag=$("pag"),acciones=$("acciones"),ba=$("botonAnterior"),bs=$("botonSiguiente"),audioClash=$("audioClash"),audioFallen=$("audioFallen"),audioVictoria=$("audioVictoria"),nombreBox=$("nombreBox"),nombreInput=$("nombreInput");
 const textos=["En un mundo muy lejano...","Espera un poco más cerca","Más cerca!","Ahí sí, de ese hablo...","el inicio...","Este chico tiene miedo.","A {NOMBRE} le ha gustado ese nombre!","¿Uh? {NOMBRE}, ¿a dónde vas {NOMBRE}?","{NOMBRE}: Mmm...|||bueno,supongo que mientras {NOMBRE} tiene una uh,¿crisis mental? daremos unos pequeños datos sobre el!","{NOMBRE}: Creo que debería levantarme.","{NOMBRE}: ...","{NOMBRE}: cierto!hoy es el cumple de FV!","{NOMBRE}: voy a hablar en el chat!","...","{NOMBRE}: UGH,PARA QUE ESTE TONTO DE WARDEN QUIERE QUE VEAMOS EL BUZON?!","","{NOMBRE}: bueno,ya que,primero agarrare mi palanca","...","mientras nuestro pequeño {NOMBRE} bajaba las escaleras...","oh,es tan misterioso y cool que no podemos?","AAAAAAAAAAAAAAAAAAAA","","...","{NOMBRE}: es una mierda!","","veamos si funciona!","...","el clash","{NOMBRE}:heh...gane!","{NOMBRE}: uh? el juego esta listo!","loading...","IC: huh? y ese ruido?","IC:sera mejor que valla a revisar creo...","IC: WTF","IC:Siento que hay alfo detras de mi...","IC: AAAAAAAAA","Clash!","Ahora eres Samantha,tu mote es HS,tienes 13 años y eres la mayor del grupo.","Tu arma son los revolveres!","aunque el tonto de Warden te molesta con que eres una vaquera...","Que fastidio!","Lo bueno es que Warden te dejo algo en el buzon,vamos a ver que es!","...","Despues de esa pelea epica vuelves a tu habitacion pero estaba custodiada por 3 Skybounders!","Decides ir a la Skyfusion.","Pones tu palanca y hierro.","...","Consigues la palanca de uña! Tus stats han mejorado.","IC: jeh,jodanse ustedes 3!","Clash!","IC:HELLL YAAAAHAHHAHHHH||| HS:uhhhmm chiken respooondeee???chiken???||| IC:uh? que paso star?||| HS:Estaba pensando en que podria ir a...verte!||| IC:suena cool!,te veo despues :D","IC: uh? star ya esta fuera!","IC: Hey star!||| HS:heya chiken!","muuuuchaaa conversacion despues..","IC: y bueno como te- uh? que fue eso?","IC: AAAAAAA||| HS:AAAAAAAA","clash!","...","IC:QUE MIERDA PASO?!?!","HS:uhhhm,cual es tu nombre chiken? el mio es samantha!||| IC: el mio es {NOMBRE}!","HS:mucho gusto {NOMBRE}!","...","fin del acto 1!","empezar acto 2!","{NOMBRE}: adios sam!","{NOMBRE}: uh? que fue eso?","{NOMBRE}:sera mejor que valla a ver...","{NOMBRE}:OH","{NOMBRE}: creo que deberia devolverme...","{NOMBRE}: MIERDA","...","{NOMBRE}:ODIOS PORFAVOR NO","{NOMBRE}: AAAAAAAAA","{NOMBRE}:uh? QUIEN ERES?!?!||| ???:hola si ok","???:mi nombre es samm!","{NOMBRE}: bueno...PODRIAMOS DEJAR DE HABLAR Y INTENTAR QUE ESTAS COSAS NO ME MATEN?!?!||| samm:ok","","","Samm:hey uhhh {NOMBRE} sigues usando esa cosa toda fea y chica?!||| {NOMBRE}: si! que tiene?!||| Samm:nada...toma esto...","FUCKKKK YESSSS","{NOMBRE}:esta mierda es genial!","Samm:heh,sabia que te gustaria!","mucha conversacion aburrida...","en un mundo muy lejano...","ahora eres trini...","uh oh,tu madre a llegado!","blablabla","blablabla","","{NOMBRE}:AAAA|||Samm:AAAA","Hilbert: oye sin ojos de mrd||| Rim:como me dijiste?!||| Hilbert: se que toda la mierda que ahora está pasando es tu culpa!|||Rim:callate de una vez!|||Hilbert:si me intentas hacer callar,que sea en una pelea!","Samantha:chau cosas feas!",""];
 while(textos.length<TOTAL)textos.push("");
-
 const nombres={5:"[V]: el inicio",22:"[V]: ver el buzón",28:"[C]: Clash!",31:"[V]: loading",37:"[C]: Skybound!",50:"[C]: More Skybounds?!",57:"[C]: The Fallen...",58:"[V]: The Fallen...",71:"[V]: Hilbert SHIT",77:"[V]: ???",78:"[C]: Samm + Hilbert vs 2 Fallen",92:"[V]: vs Rim",94:"[C]: Samantha vs Skybounds"};
-
 const videos={5:"pelea.mp4",22:"TBS.mp4",31:"loadingTBS.mp4",58:"Fallenwin.mp4",71:"hilbertSHIT.mp4",77:"something.mp4",92:"vsrim.mp4"};
-
 function nombre(){return nombreHilbert.trim()||"Hilbert"}
 function esc(s){return String(s).replace(/[&<>"']/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x]))}
 function mostrarTexto(t){return String(t).replace(/\{NOMBRE\}/g,nombre()).split("|||").map(x=>`<div class="linea">${esc(x)}</div>`).join("")}
 function guardar(){try{localStorage.setItem("TheBigSKY_Save",JSON.stringify({pagina,nombreHilbert}))}catch(e){}}
 try{const s=JSON.parse(localStorage.getItem("TheBigSKY_Save"));if(s&&Number.isInteger(s.pagina)&&s.pagina>=1&&s.pagina<=TOTAL)pagina=s.pagina;if(s&&typeof s.nombreHilbert==="string")nombreHilbert=s.nombreHilbert}catch(e){}
-
 function gif(n){contenido.innerHTML=`<img src="${n}.gif" alt="">`}
 function pararAudios(){try{audioClash.pause();audioClash.currentTime=0}catch(e){}try{audioFallen.pause();audioFallen.currentTime=0}catch(e){}try{audioVictoria.pause();audioVictoria.currentTime=0}catch(e){}}
 function iniciarAudio(a){try{a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
-
 function abrirMapa(){$("mapa").style.display="block";$("mapa").setAttribute("aria-hidden","false")}
 function cerrarMapa(){$("mapa").style.display="none";$("mapa").setAttribute("aria-hidden","true")}
 function irMapa(n){cerrarMapa();pagina=n;actualizar()}
 function mostrarNombre(){nombreBox.style.display="block";nombreInput.focus()}
 function confirmarNombre(){const n=nombreInput.value.trim();if(!n)return;nombreHilbert=n;nombreBox.style.display="none";guardar();actualizar()}
 function iniciarTBS(){$("startButton").style.display="none";pagina=1;actualizar()}
-
-function ocultarClashGeneral(){
-vida.style.display="none";
-acciones.style.display="none";
-$("barrasTres").style.display="none";
-$("barrasFallen").style.display="none";
-$("barrasFallen2").style.display="none";
-$("barraNormal").style.display="block";
-$("jugadorHP").style.display="none";
-}
-
-function bloquearAcciones(v){
-$("botonHablar").disabled=v;
-$("botonAtacar").disabled=v;
-$("botonHuir").disabled=v;
-}
-  function iniciarClash(config){
-tipoClash=config.tipo;
-terminado=false;
-hpJugador=config.hpJugador||85;
-objetivos=config.objetivos||[];
-objetivoActual=0;
-ocultarClashGeneral();
-vida.style.display="block";
-acciones.style.display="block";
-$("nombreE").textContent=config.nombreEnemigo||"ENEMIGO";
-$("barraUnica").style.width="100%";
-$("hp").textContent=`${config.hp||100}/${config.hp||100}`;
-$("nombreJugadorClash").textContent=config.nombreJugador||"JUGADOR";
-$("barraJugadorClash").style.width="100%";
-$("hpJugadorClash").textContent=`${hpJugador}/${config.hpJugador||85}`;
-$("jugadorHP").style.display=config.mostrarJugador?"block":"none";
-
-if(config.tipo==="tres"){
-$("barraNormal").style.display="none";
-$("barrasTres").style.display="block";
-config.hpSkybounds=[75,75,75];
-hpSkybounds=config.hpSkybounds;
-actualizarTres();
-}
-if(config.tipo==="fallen"){
-$("barraNormal").style.display="none";
-$("barrasFallen").style.display="block";
-actualizarFallen();
-}
-if(config.tipo==="fallen2"){
-$("barraNormal").style.display="none";
-$("barrasFallen2").style.display="block";
-actualizarFallen2();
-}
-
-bloquearAcciones(false);
-gif(config.gifNormal||"ESN");
-if(config.audio==="fallen"){pararAudios();iniciarAudio(audioFallen)}
-else iniciarAudio(audioClash);
-}
-
+function ocultarClashGeneral(){vida.style.display="none";acciones.style.display="none";$("barrasTres").style.display="none";$("barrasFallen").style.display="none";$("barrasFallen2").style.display="none";$("barraNormal").style.display="block";$("jugadorHP").style.display="none"}
+function bloquearAcciones(v){$("botonHablar").disabled=v;$("botonAtacar").disabled=v;$("botonHuir").disabled=v}
+function iniciarClash(config){tipoClash=config.tipo;terminado=false;hpJugador=config.hpJugador||85;objetivos=config.objetivos||[];objetivoActual=0;ocultarClashGeneral();vida.style.display="block";acciones.style.display="block";$("nombreE").textContent=config.nombreEnemigo||"ENEMIGO";$("barraUnica").style.width="100%";$("hp").textContent=`${config.hp||100}/${config.hp||100}`;$("nombreJugadorClash").textContent=config.nombreJugador||"JUGADOR";$("barraJugadorClash").style.width="100%";$("hpJugadorClash").textContent=`${hpJugador}/${config.hpJugador||85}`;$("jugadorHP").style.display=config.mostrarJugador?"block":"none";if(config.tipo==="tres"){$("barraNormal").style.display="none";$("barrasTres").style.display="block";config.hpSkybounds=[75,75,75];hpSkybounds=config.hpSkybounds;actualizarTres()}if(config.tipo==="fallen"){$("barraNormal").style.display="none";$("barrasFallen").style.display="block";actualizarFallen()}if(config.tipo==="fallen2"){$("barraNormal").style.display="none";$("barrasFallen2").style.display="block";actualizarFallen2()}bloquearAcciones(false);gif(config.gifNormal||"ESN");if(config.audio==="fallen"){pararAudios();iniciarAudio(audioFallen)}else iniciarAudio(audioClash)}
 let configClash=null,hpSkybounds=[75,75,75];
 
-function iniciarPapa(){
-configClash={tipo:"papa",nombreEnemigo:"PAPÁ",hp:100,hpJugador:85,daño:20,mostrarJugador:false,gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH"};
-iniciarClash(configClash);
-pacienciaPapa=100;
-$("barraUnica").style.width="100%";
-$("hp").textContent="100/100";
-}
+function iniciarPapa(){configClash={tipo:"papa",nombreEnemigo:"PAPÁ",hp:100,hpJugador:85,daño:20,mostrarJugador:false,gifNormal:"escenaN",gifAtaque:"escenaG",gifHuir:"escenaP"};iniciarClash(configClash);pacienciaPapa=100;$("barraUnica").style.width="100%";$("hp").textContent="100/100"}
+function iniciarSky(){configClash={tipo:"sky",nombreEnemigo:"SKYBOUND",hp:75,hpJugador:85,daño:20,mostrarJugador:false,gifNormal:"escenaNS",gifAtaque:"escenaGS",gifHuir:"escenaS"};iniciarClash(configClash)}
+function iniciarTres(){configClash={tipo:"tres",nombreEnemigo:"SKYBOUNDS",hpJugador:85,daño:20,mostrarJugador:false,gifNormal:"escenaNS",gifAtaque:"escenaGS",gifHuir:"escenaS"};hpSkybounds=[75,75,75];iniciarClash(configClash)}
+function iniciarFallen(){configClash={tipo:"fallen",nombreEnemigo:"FALLEN",hp:850,hpJugador:110,daño:20,mostrarJugador:true,nombreJugador:"HILBERT",gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH",audio:"fallen"};hpFallen=850;hpHilbertFallen=110;hpSamanthaFallen=100;iniciarClash(configClash)}
+function iniciarFallen2(){configClash={tipo:"fallen2",nombreEnemigo:"FALLEN",hpJugador:110,daño:20,mostrarJugador:true,nombreJugador:"HILBERT",gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH",audio:"fallen"};hpFallen1=850;hpFallen2=850;hpHilbert78=110;iniciarClash(configClash)}
+function iniciarSamantha(){configClash={tipo:"samantha",nombreEnemigo:"SKYBOUNDS",hp:75,hpJugador:90,daño:65,dañoEnemigo:15,mostrarJugador:true,nombreJugador:"SAMANTHA",gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH"};hpSkybounds=[75,75];iniciarClash(configClash)}
 
-function iniciarSky(){
-configClash={tipo:"sky",nombreEnemigo:"SKYBOUND",hp:75,hpJugador:85,daño:20,mostrarJugador:false,gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH"};
-iniciarClash(configClash);
-}
-
-function iniciarTres(){
-configClash={tipo:"tres",nombreEnemigo:"SKYBOUNDS",hpJugador:85,daño:20,mostrarJugador:false,gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH"};
-hpSkybounds=[75,75,75];
-iniciarClash(configClash);
-}
-
-function iniciarFallen(){
-configClash={tipo:"fallen",nombreEnemigo:"FALLEN",hp:850,hpJugador:110,daño:20,mostrarJugador:true,nombreJugador:"HILBERT",gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH",audio:"fallen"};
-hpFallen=850;hpHilbertFallen=110;hpSamanthaFallen=100;
-iniciarClash(configClash);
-}
-
-function iniciarFallen2(){
-configClash={tipo:"fallen2",nombreEnemigo:"FALLEN",hpJugador:110,daño:20,mostrarJugador:true,nombreJugador:"HILBERT",gifNormal:"ESN",gifAtaque:"ESA",gifHuir:"ESH",audio:"fallen"};
-hpFallen1=850;hpFallen2=850;hpHilbert78=110;
-iniciarClash(configClash);
-}
-
-function iniciarSamantha(){
-configClash={
-tipo:"samantha",
-nombreEnemigo:"SKYBOUNDS",
-hp:75,
-hpJugador:90,
-daño:65,
-dañoEnemigo:15,
-mostrarJugador:true,
-nombreJugador:"SAMANTHA",
-gifNormal:"ESN",
-gifAtaque:"ESA",
-gifHuir:"ESH"
-};
-hpSkybounds=[75,75];
-iniciarClash(configClash);
-}
-
-function actualizarTres(){
-$("barraSky1").style.width=Math.max(0,hpSkybounds[0]/75*100)+"%";
-$("barraSky2").style.width=Math.max(0,hpSkybounds[1]/75*100)+"%";
-$("barraSky3").style.width=Math.max(0,hpSkybounds[2]/75*100)+"%";
-$("hpTres").textContent=`Skybound 1: ${Math.max(0,hpSkybounds[0])}/75 | Skybound 2: ${Math.max(0,hpSkybounds[1])}/75 | Skybound 3: ${Math.max(0,hpSkybounds[2])}/75`;
-}
-
-function actualizarFallen(){
-$("barraFallen").style.width=Math.max(0,hpFallen/850*100)+"%";
-$("barraHilbertFallen").style.width=Math.max(0,hpHilbertFallen/110*100)+"%";
-$("barraSamanthaFallen").style.width=Math.max(0,hpSamanthaFallen/100*100)+"%";
-$("hpFallen").textContent=`${Math.max(0,hpFallen)}/850`;
-$("hpHilbertFallen").textContent=`${Math.max(0,hpHilbertFallen)}/110`;
-$("hpSamanthaFallen").textContent=`${Math.max(0,hpSamanthaFallen)}/100`;
-}
-
-function actualizarFallen2(){
-$("barraFallen1").style.width=Math.max(0,hpFallen1/850*100)+"%";
-$("barraFallen2").style.width=Math.max(0,hpFallen2/850*100)+"%";
-$("barraHilbert78").style.width=Math.max(0,hpHilbert78/110*100)+"%";
-$("hpFallen1").textContent=`${Math.max(0,hpFallen1)}/850`;
-$("hpFallen2").textContent=`${Math.max(0,hpFallen2)}/850`;
-$("hpHilbert78").textContent=`${Math.max(0,hpHilbert78)}/110`;
-}
-
-function actualizarJugador(){
-if(!configClash)return;
-const max=configClash.hpJugador||85;
-$("barraJugadorClash").style.width=Math.max(0,hpJugador/max*100)+"%";
-$("hpJugadorClash").textContent=`${Math.max(0,hpJugador)}/${max}`;
-}
+function actualizarTres(){$("barraSky1").style.width=Math.max(0,hpSkybounds[0]/75*100)+"%";$("barraSky2").style.width=Math.max(0,hpSkybounds[1]/75*100)+"%";$("barraSky3").style.width=Math.max(0,hpSkybounds[2]/75*100)+"%";$("hpTres").textContent=`Skybound 1: ${Math.max(0,hpSkybounds[0])}/75 | Skybound 2: ${Math.max(0,hpSkybounds[1])}/75 | Skybound 3: ${Math.max(0,hpSkybounds[2])}/75`}
+function actualizarFallen(){$("barraFallen").style.width=Math.max(0,hpFallen/850*100)+"%";$("barraHilbertFallen").style.width=Math.max(0,hpHilbertFallen/110*100)+"%";$("barraSamanthaFallen").style.width=Math.max(0,hpSamanthaFallen/100*100)+"%";$("hpFallen").textContent=`${Math.max(0,hpFallen)}/850`;$("hpHilbertFallen").textContent=`${Math.max(0,hpHilbertFallen)}/110`;$("hpSamanthaFallen").textContent=`${Math.max(0,hpSamanthaFallen)}/100`}
+function actualizarFallen2(){$("barraFallen1").style.width=Math.max(0,hpFallen1/850*100)+"%";$("barraFallen2").style.width=Math.max(0,hpFallen2/850*100)+"%";$("barraHilbert78").style.width=Math.max(0,hpHilbert78/110*100)+"%";$("hpFallen1").textContent=`${Math.max(0,hpFallen1)}/850`;$("hpFallen2").textContent=`${Math.max(0,hpFallen2)}/850`;$("hpHilbert78").textContent=`${Math.max(0,hpHilbert78)}/110`}
+function actualizarJugador(){if(!configClash)return;const max=configClash.hpJugador||85;$("barraJugadorClash").style.width=Math.max(0,hpJugador/max*100)+"%";$("hpJugadorClash").textContent=`${Math.max(0,hpJugador)}/${max}`}
 
 function atacar(){
-if(terminado||!configClash)return;
-
-gif(configClash.gifAtaque||"ESA");
-
-if(configClash.tipo==="papa"){
-pacienciaPapa-=configClash.daño;
-$("barraUnica").style.width=Math.max(0,pacienciaPapa)+"%";
-$("hp").textContent=Math.max(0,pacienciaPapa)+"/100";
-if(pacienciaPapa<=0)finClash("¡Ganaste el clash contra Papá!");
-return;
+if(terminado||!configClash)return;gif(configClash.gifAtaque||"ESA");
+if(configClash.tipo==="papa"){pacienciaPapa-=configClash.daño;$("barraUnica").style.width=Math.max(0,pacienciaPapa)+"%";$("hp").textContent=Math.max(0,pacienciaPapa)+"/100";if(pacienciaPapa<=0)finClash("¡Ganaste el clash contra Papá!");return}
+if(configClash.tipo==="sky"){let d=configClash.daño||20;configClash.hp-=d;$("barraUnica").style.width=Math.max(0,configClash.hp/75*100)+"%";$("hp").textContent=Math.max(0,configClash.hp)+"/75";if(configClash.hp<=0)finClash("¡Derrotaste al Skybound!");return}
+if(configClash.tipo==="tres"){for(let i=0;i<3;i++)if(hpSkybounds[i]>0){hpSkybounds[i]-=configClash.daño||20;break}actualizarTres();if(hpSkybounds.every(x=>x<=0))finClash("¡Derrotaste a los tres Skybounds!");return}
+if(configClash.tipo==="fallen"){hpFallen-=configClash.daño||20;actualizarFallen();if(hpFallen<=0)finClash("¡Los Fallen fueron derrotados!");return}
+if(configClash.tipo==="fallen2"){if(hpFallen1>0)hpFallen1-=configClash.daño||20;else if(hpFallen2>0)hpFallen2-=configClash.daño||20;actualizarFallen2();if(hpFallen1<=0&&hpFallen2<=0)finClash("¡Derrotaste a los dos Fallen!");return}
+if(configClash.tipo==="samantha"){let i=hpSkybounds[0]>0?0:1;hpSkybounds[i]-=configClash.daño;if(i===0){$("barraUnica").style.width=Math.max(0,hpSkybounds[0]/75*100)+"%";$("hp").textContent=Math.max(0,hpSkybounds[0])+"/75"}else{$("barraUnica").style.width=Math.max(0,hpSkybounds[1]/75*100)+"%";$("hp").textContent=Math.max(0,hpSkybounds[1])+"/75"}actualizarJugador();if(hpSkybounds.every(x=>x<=0)){finClash("¡Samantha derrotó a los dos Skybounds!");return}setTimeout(turnoEnemigo,400)}
 }
-
-if(configClash.tipo==="sky"){
-let d=configClash.daño||20;
-configClash.hp-=d;
-$("barraUnica").style.width=Math.max(0,configClash.hp/75*100)+"%";
-$("hp").textContent=Math.max(0,configClash.hp)+"/75";
-if(configClash.hp<=0)finClash("¡Derrotaste al Skybound!");
-return;
-}
-
-if(configClash.tipo==="tres"){
-for(let i=0;i<3;i++)if(hpSkybounds[i]>0){hpSkybounds[i]-=configClash.daño||20;break}
-actualizarTres();
-if(hpSkybounds.every(x=>x<=0))finClash("¡Derrotaste a los tres Skybounds!");
-return;
-}
-
-if(configClash.tipo==="fallen"){
-hpFallen-=configClash.daño||20;
-actualizarFallen();
-if(hpFallen<=0)finClash("¡Los Fallen fueron derrotados!");
-return;
-}
-
-if(configClash.tipo==="fallen2"){
-if(hpFallen1>0)hpFallen1-=configClash.daño||20;
-else if(hpFallen2>0)hpFallen2-=configClash.daño||20;
-actualizarFallen2();
-if(hpFallen1<=0&&hpFallen2<=0)finClash("¡Derrotaste a los dos Fallen!");
-return;
-}
-
-if(configClash.tipo==="samantha"){
-let i=hpSkybounds[0]>0?0:1;
-hpSkybounds[i]-=configClash.daño;
-if(i===0){
-$("barraUnica").style.width=Math.max(0,hpSkybounds[0]/75*100)+"%";
-$("hp").textContent=Math.max(0,hpSkybounds[0])+"/75";
-}else{
-$("barraUnica").style.width=Math.max(0,hpSkybounds[1]/75*100)+"%";
-$("hp").textContent=Math.max(0,hpSkybounds[1])+"/75";
-}
-actualizarJugador();
-
-if(hpSkybounds.every(x=>x<=0)){
-finClash("¡Samantha derrotó a los dos Skybounds!");
-return;
-}
-
-setTimeout(turnoEnemigo,400);
-}
-}
-
-function hablar(){
-if(terminado||!configClash)return;
-gif(configClash.gifNormal||"ESN");
-
-if(configClash.tipo==="papa")texto.innerHTML="Hilbert intenta hablar con Papá.";
-else if(configClash.tipo==="sky")texto.innerHTML="El Skybound no parece interesado en hablar.";
-else if(configClash.tipo==="samantha"){
-texto.innerHTML="Samantha intenta hablar con los Skybounds.";
-setTimeout(turnoEnemigo,500);
-}else texto.innerHTML="No parece que hablar vaya a funcionar.";
-}
-
-function huir(){
-if(terminado||!configClash)return;
-gif(configClash.gifHuir||"ESH");
-finClash("Huiste del clash.");
-}
-
-function turnoEnemigo(){
-if(terminado||!configClash)return;
-
-if(configClash.tipo==="samantha"){
-let vivos=hpSkybounds.filter(x=>x>0).length;
-if(vivos<=0)return;
-let daño=vivos*(configClash.dañoEnemigo||15);
-hpJugador=Math.max(0,hpJugador-daño);
-actualizarJugador();
-gif(configClash.gifNormal||"ESN");
-
-if(vivos===2)texto.innerHTML="¡Los dos Skybounds atacan! Samantha recibe 30 de daño.";
-else texto.innerHTML="¡El Skybound ataca! Samantha recibe 15 de daño.";
-
-if(hpJugador<=0){
-finClash("Samantha fue derrotada.");
-return;
-}
-}
-}
-
-function finClash(mensaje){
-terminado=true;
-bloquearAcciones(true);
-acciones.style.display="none";
-vida.style.display="none";
-pararAudios();
-iniciarAudio(audioVictoria);
-texto.innerHTML=`<div class="linea">${esc(mensaje)}</div>`;
-}
-
-function mensajeClashEliminado(){
-ocultarClashGeneral();
-texto.innerHTML='<div class="mensajeEliminado">acá había un Clash pero fue eliminado,NO volverá,gracias por leer</div>';
-}
+function hablar(){if(terminado||!configClash)return;gif(configClash.gifNormal||"ESN");if(configClash.tipo==="papa")texto.innerHTML="Hilbert intenta hablar con Papá.";else if(configClash.tipo==="sky")texto.innerHTML="El Skybound no parece interesado en hablar.";else if(configClash.tipo==="samantha"){texto.innerHTML="Samantha intenta hablar con los Skybounds.";setTimeout(turnoEnemigo,500)}else texto.innerHTML="No parece que hablar vaya a funcionar."}
+function huir(){if(terminado||!configClash)return;gif(configClash.gifHuir||"ESH");finClash("Huiste del clash.")}
+function turnoEnemigo(){if(terminado||!configClash)return;if(configClash.tipo==="samantha"){let vivos=hpSkybounds.filter(x=>x>0).length;if(vivos<=0)return;let daño=vivos*(configClash.dañoEnemigo||15);hpJugador=Math.max(0,hpJugador-daño);actualizarJugador();gif(configClash.gifNormal||"ESN");if(vivos===2)texto.innerHTML="¡Los dos Skybounds atacan! Samantha recibe 30 de daño.";else texto.innerHTML="¡El Skybound ataca! Samantha recibe 15 de daño.";if(hpJugador<=0){finClash("Samantha fue derrotada.");return}}}
+function finClash(mensaje){terminado=true;bloquearAcciones(true);acciones.style.display="none";vida.style.display="none";pararAudios();iniciarAudio(audioVictoria);texto.innerHTML=`<div class="linea">${esc(mensaje)}</div>`}
+function mensajeClashEliminado(){ocultarClashGeneral();texto.innerHTML='<div class="mensajeEliminado">acá había un Clash pero fue eliminado,NO volverá,gracias por leer</div>'}
 
 function actualizar(){
-pararAudios();
-ocultarClashGeneral();
-tipoClash=null;
-configClash=null;
-terminado=true;
-bloquearAcciones(true);
-nombreBox.style.display="none";
-pag.textContent=`Página ${pagina} / ${TOTAL}`;
-
-if(videos[pagina])contenido.innerHTML=`<video src="${videos[pagina]}" controls playsinline></video>`;
-else contenido.innerHTML=`<img src="${String(pagina).padStart(3,"0")}.png" alt="Página ${pagina} de The Big SKY">`;
-
-if(pagina===57||pagina===78){
-mensajeClashEliminado();
-}else{
-texto.innerHTML=mostrarTexto(textos[pagina-1]||"");
-}
-
+pararAudios();ocultarClashGeneral();tipoClash=null;configClash=null;terminado=true;bloquearAcciones(true);nombreBox.style.display="none";pag.textContent=`Página ${pagina} / ${TOTAL}`;
+if(videos[pagina])contenido.innerHTML=`<video src="${videos[pagina]}" controls playsinline></video>`;else contenido.innerHTML=`<img src="${String(pagina).padStart(3,"0")}.png" alt="Página ${pagina} de The Big SKY">`;
+if(pagina===57||pagina===78)mensajeClashEliminado();else texto.innerHTML=mostrarTexto(textos[pagina-1]||"");
 $("nombreBoton").style.display=pagina===6?"inline-block":"none";
-
-if(pagina===28)iniciarPapa();
-if(pagina===37)iniciarSky();
-if(pagina===50)iniciarTres();
-if(pagina===94)iniciarSamantha();
-
-guardar();
-window.scrollTo({top:0,behavior:"smooth"});
+if(pagina===28)iniciarPapa();if(pagina===37)iniciarSky();if(pagina===50)iniciarTres();if(pagina===94)iniciarSamantha();
+guardar();window.scrollTo({top:0,behavior:"smooth"})
 }
-
-function irAnterior(){
-if(pagina<=1)return;
-pagina--;
-actualizar();
-}
-
-function irSiguiente(){
-if(pagina>=TOTAL)return;
-pagina++;
-actualizar();
-}
-
-document.addEventListener("keydown",e=>{
-if(e.key==="ArrowLeft")irAnterior();
-if(e.key==="ArrowRight")irSiguiente();
-if(e.key==="Escape"&&$("mapa").style.display==="block")cerrarMapa();
-});
-
+function irAnterior(){if(pagina<=1)return;pagina--;actualizar()}
+function irSiguiente(){if(pagina>=TOTAL)return;pagina++;actualizar()}
+document.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")irAnterior();if(e.key==="ArrowRight")irSiguiente();if(e.key==="Escape"&&$("mapa").style.display==="block")cerrarMapa()});
 actualizar();
 </script></body></html>
